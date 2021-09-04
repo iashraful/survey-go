@@ -9,6 +9,7 @@ from alembic import context
 # access to the values within the .ini file in use.
 from api.core.database import SQLALCHEMY_DATABASE_URL
 from api.core.model_base import ModelBase
+from api.models import *
 
 config = context.config
 
