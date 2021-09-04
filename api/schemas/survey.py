@@ -13,9 +13,10 @@ class SurveySchema(BaseModel):
 
 class SurveyQuestionSchema(BaseModel):
     id: int
-    text: str
-    text_translation: str
-    status: str
+    # text: str
+    # # survey_id: int
+    # text_translation: str
+    # status: str
 
     class Config:
         orm_mode = True
