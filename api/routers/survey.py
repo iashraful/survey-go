@@ -17,7 +17,13 @@ def get_surveys(db: Session = Depends(get_db)):
     return surveys
 
 
-@router.get('/questions/{id}/', response_model=List[SurveyQuestionSchema])
-def get_surveys(id: int, db: Session = Depends(get_db)):
-    questions = db.query(SurveyQuestion).filter_by(survey_id=id).all()
+@router.get('/questions/{survey_id}/', response_model=List[SurveyQuestionSchema])
+def get_questions(survey_id: int, db: Session = Depends(get_db)):
+    """
+    Get Questions for a specific survey
+    :param survey_id: This is survey ID
+    :param db: This is a session instance to access the database gently
+    :return: Sqlalchemy queryset of objects
+    """
+    questions = db.query(SurveyQuestion).filter_by(survey_id=survey_id).all()
     return questions
