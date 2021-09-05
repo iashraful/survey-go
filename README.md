@@ -1,8 +1,13 @@
-# Log Service
-> A universal log management service
+# Survey API
+> A collection of APIs for designing and collecting response for surveys
+
+![Coming Soon](https://www.pngitem.com/pimgs/m/46-460575_product-under-development-hd-png-download.png)
 
 ## Features
-* Log from other services by using pub/sub pattern
-* CRUD Operations on logs
-* API as well as UI  
+* REST APIs
+* Restricted(User login required or user email should be under an organization) Surveys
+* Public Surveys (Anyone can fill)
+* SSO Login (Google, Facebook)
+* Basic Reports
+
 ...will be added more
