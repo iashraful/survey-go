@@ -43,6 +43,17 @@ services:
     expose:
       - 6379
 
+  client:
+    build: ./client
+    restart: always
+    container_name: survey_react_client
+    command: sh -c "yarn install && yarn start"
+    working_dir: /app/client
+    volumes:
+      - ./client:/app/client:cached
+    ports:
+      - '8082:3000'
+
 networks:
   survey_network:
     name: nginx-api-gateway-network
