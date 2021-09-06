@@ -4,9 +4,10 @@ from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
+from api.core.auth import get_current_user
 from api.core.database import get_db
-from api.models import Survey, SurveyQuestion
-from api.schemas.survey import SurveySchema, SurveyQuestionSchema
+from api.models import Survey, SurveyQuestion, User
+from api.schemas.survey import SurveySchema, SurveyQuestionSchema, SurveyCreateSchema, SurveyQuestionCreateSchema
 
 router = APIRouter()
 
@@ -27,3 +28,19 @@ def get_questions(survey_id: int, db: Session = Depends(get_db)):
     """
     questions = db.query(SurveyQuestion).filter_by(survey_id=survey_id).all()
     return questions
+
+
+@router.post('/surveys/', response_model=SurveySchema)
+def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
+                  current_user: User = Depends(get_current_user)):
+    _survey = Survey(
+        user_id=current_user.id, name=survey.name, instructions=survey.instructions
+    )
+    for question in survey.questions:
+        _ques = SurveyQuestion(text=question.text, text_translation=question.text_translation, type=question.type)
+        db.add(_ques)
+        db.commit()
+    db.add(_survey)
+    db.commit()
+    db.refresh(_survey)
+    return _survey

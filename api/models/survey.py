@@ -7,6 +7,8 @@ from api.enums.survey_enums import SurveyStatusEnum
 
 class Survey(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User")
     name = Column(String)
     instructions = Column(String, nullable=True)
     status = Column(String, default=SurveyStatusEnum.Draft.value)
@@ -32,6 +34,7 @@ class SurveyQuestion(ModelBase):
     )
     text = Column(String)
     text_translation = Column(String, nullable=True)
+    type = Column(String)
     status = Column(String, default=SurveyStatusEnum.Draft.value)
 
     answers = relationship(

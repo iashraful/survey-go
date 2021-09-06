@@ -8,7 +8,7 @@ app = FastAPI()
 
 # Anything with the router
 for _r in routers.routes:
-    app.include_router(_r)
+    app.include_router(_r, prefix='/api')
 
 
 # Register all the middlewares here
