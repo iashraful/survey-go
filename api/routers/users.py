@@ -2,9 +2,10 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
-from api.core.auth import authenticate, create_access_token
+from api.core.auth import authenticate, create_access_token, get_current_user
 from api.core.database import get_db
 from api.core.security import get_password_hash, verify_password
 from api.models.user import User
@@ -14,8 +15,8 @@ router = APIRouter()
 
 
 @router.post(path='/login/', status_code=200)
-def user_login(user: LoginSchema, db: Session = Depends(get_db)):
-    user_instance = authenticate(email=user.email, password=user.password, db=db)
+def user_login(form_data: OAuth2PasswordRequestForm = Depends() , db: Session = Depends(get_db)):
+    user_instance = authenticate(email=form_data.username, password=form_data.password, db=db)
     if user_instance:
         return {
             'access_token': create_access_token(sub=str(user_instance.id)),
@@ -46,3 +47,9 @@ def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(instance)
     return instance
+
+
+
+@router.get(path='/me/', response_model=UserListSchema, status_code=200)
+def get_login_user(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return current_user
