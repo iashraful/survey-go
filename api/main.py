@@ -12,6 +12,10 @@ app = FastAPI()
 for _r in routers.v1_routes:
     app.include_router(_r, prefix=settings.V1_API_PREFIX)
 
+# Anything with the router v2
+for _r in routers.v2_routes:
+    app.include_router(_r, prefix=settings.V2_API_PREFIX)
+
 # Register all the middlewares here
 app.add_middleware(
     CORSMiddleware,
