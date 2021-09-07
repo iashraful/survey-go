@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     JWT_SECRET: str = os.environ.get('JWT_SECRET', 'TEST-JWT-SECRET')
     JWT_ALGORITHM: str = "HS256"
 
+    V1_API_PREFIX = '/api/v1'
+    V2_API_PREFIX = '/api/v2'
+    V3_API_PREFIX = '/api/v3'
+
     # 60 minutes * 24 hours * 8 days = 8 days
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 8
 

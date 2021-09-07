@@ -3,12 +3,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api import routers
+from api.core.config import settings
 
 app = FastAPI()
 
-# Anything with the router
-for _r in routers.routes:
-    app.include_router(_r, prefix='/api')
+# Anything with the router v1
+for _r in routers.v1_routes:
+    app.include_router(_r, prefix=settings.V1_API_PREFIX)
 
 
 # Register all the middlewares here

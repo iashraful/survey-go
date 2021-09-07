@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from api.schemas.user import UserBasicSchema
+from api.schemas.v1.user import UserBasicSchema
 
 
 class SurveySchema(BaseModel):

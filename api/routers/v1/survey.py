@@ -7,8 +7,7 @@ from sqlalchemy.orm import Session
 from api.core.auth import get_current_user
 from api.core.database import get_db
 from api.models import Survey, SurveyQuestion, User, QuestionOption
-from api.schemas.survey import SurveySchema, SurveyQuestionSchema, SurveyCreateSchema, SurveyQuestionCreateSchema, \
-    SurveyDetailsSchema
+from api.schemas.v1.survey import SurveySchema, SurveyQuestionSchema, SurveyCreateSchema, SurveyDetailsSchema
 
 router = APIRouter()
 
