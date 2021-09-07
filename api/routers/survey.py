@@ -19,6 +19,12 @@ def get_surveys(db: Session = Depends(get_db)):
     return surveys
 
 
+@router.get('/surveys/{survey_id}/', response_model=SurveyDetailsSchema)
+def get_survey_details(survey_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    survey_details = db.query(Survey).get(ident=survey_id)
+    return survey_details
+
+
 @router.get('/questions/{survey_id}/', response_model=List[SurveyQuestionSchema])
 def get_questions(survey_id: int, db: Session = Depends(get_db)):
     """
