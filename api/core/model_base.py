@@ -2,11 +2,13 @@ import typing as t
 
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
+from api.core.access_control import DataAccessQueryModelManager
+
 class_registry: t.Dict = {}
 
 
 @as_declarative(class_registry=class_registry)
-class ModelBase:
+class ModelBase(DataAccessQueryModelManager):
     id: t.Any
     __name__: str
 
@@ -18,3 +20,4 @@ class ModelBase:
     @declared_attr
     def __tablename__(cls) -> str:
         return cls.get_table_name()
+

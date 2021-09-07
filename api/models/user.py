@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean
+from sqlalchemy import Column, Integer, String, Boolean
 
+from api.core.access_control import DataAccessQueryModelManager
 from api.core.model_base import ModelBase
 
 

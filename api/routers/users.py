@@ -30,12 +30,12 @@ def user_login(form_data: OAuth2PasswordRequestForm = Depends() , db: Session = 
 
 @router.get(path='/users/', response_model=List[UserListSchema], status_code=200)
 def get_users(db: Session = Depends(get_db)):
-    users = db.query(User).all()
+    users = User.objects(db).all()
     return users
 
 @router.post(path='/users/', response_model=UserListSchema, status_code=201)
 def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
-    instance = db.query(User).filter_by(email=user.email).first()
+    instance = User.objects(db).filter_by(email=user.email).first()
     if instance:
         _password_hash = get_password_hash(password=user.password)
         raise HTTPException(

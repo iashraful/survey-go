@@ -20,7 +20,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/login/')
 
 
 def authenticate(*, email: str, password: str, db: Session) -> Optional[User]:
-    user = db.query(User).filter(User.email == email).first()
+    user = User.objects(db).filter(User.email == email).first()
     if not user:
         return None
     if not verify_password(password, user.password):
@@ -57,7 +57,7 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = db.query(User).filter(User.id == token_data.username).first()
+    user = User.objects(db).filter(User.id == token_data.username).first()
     if user is None:
         raise credentials_exception
     return user
