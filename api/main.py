@@ -1,8 +1,10 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 
 from api import routers
+from api.core.auth import BearerTokenAuthBackend
 from api.core.config import settings
 
 app = FastAPI()
@@ -10,7 +12,6 @@ app = FastAPI()
 # Anything with the router v1
 for _r in routers.v1_routes:
     app.include_router(_r, prefix=settings.V1_API_PREFIX)
-
 
 # Register all the middlewares here
 app.add_middleware(
@@ -20,6 +21,11 @@ app.add_middleware(
     allow_headers=["*"],
     allow_credentials=True,
 )
+
+
+@app.on_event('startup')
+async def startup():
+    app.add_middleware(AuthenticationMiddleware, backend=BearerTokenAuthBackend())
 
 
 @app.get("/")

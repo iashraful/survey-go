@@ -9,3 +9,7 @@ class DataAccessQueryModelManager:
     @classmethod
     def objects(cls, session: Session):
         return session.query(cls)
+
+    @classmethod
+    def default_user_filter(cls) -> str:
+        return ''

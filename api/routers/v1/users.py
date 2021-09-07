@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.params import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -15,7 +15,7 @@ router = APIRouter()
 
 
 @router.post(path='/login/', status_code=200)
-def user_login(form_data: OAuth2PasswordRequestForm = Depends() , db: Session = Depends(get_db)):
+def user_login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user_instance = authenticate(email=form_data.username, password=form_data.password, db=db)
     if user_instance:
         return {
@@ -33,15 +33,16 @@ def get_users(db: Session = Depends(get_db)):
     users = User.objects(db).all()
     return users
 
+
 @router.post(path='/users/', response_model=UserListSchema, status_code=201)
 def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     instance = User.objects(db).filter_by(email=user.email).first()
     if instance:
-        _password_hash = get_password_hash(password=user.password)
         raise HTTPException(
             status_code=400,
             detail='User already exist on the system.'
         )
+    _password_hash = get_password_hash(password=user.password)
     instance = User(name=user.name, email=user.email, password=_password_hash)
     db.add(instance)
     db.commit()
@@ -49,7 +50,7 @@ def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
     return instance
 
 
-
 @router.get(path='/me/', response_model=UserListSchema, status_code=200)
-def get_login_user(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_login_user(db: Session = Depends(get_db),
+                   current_user: User = Depends(get_current_user)):
     return current_user
