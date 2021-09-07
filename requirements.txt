@@ -17,3 +17,5 @@ zipp==3.5.0
 passlib
 python-jose
 python-multipart
+pytest
+requests
