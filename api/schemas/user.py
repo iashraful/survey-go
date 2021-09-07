@@ -36,6 +36,14 @@ class UserListSchema(BaseModel):
         orm_mode = True
 
 
+class UserBasicSchema(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
+
 class LoginSchema(BaseModel):
     email: str
     password: str

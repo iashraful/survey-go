@@ -37,8 +37,8 @@ class SurveyQuestion(ModelBase):
     type = Column(String)
     status = Column(String, default=SurveyStatusEnum.Draft.value)
 
-    answers = relationship(
-        "QuestionAnswer", cascade="all",
+    options = relationship(
+        "QuestionOption", cascade="all",
         back_populates="question",
     )
 
@@ -47,15 +47,16 @@ class SurveyQuestion(ModelBase):
         return 'questions'
 
 
-class QuestionAnswer(ModelBase):
+class QuestionOption(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     question_id = Column(Integer, ForeignKey('questions.id'))
     question = relationship(
         "SurveyQuestion", cascade="all",
-        back_populates="answers",
+        back_populates="options",
     )
-    answer_text = Column(String, nullable=True)
+    name = Column(String)
+    name_translation = Column(String, nullable=True)
 
     @classmethod
     def get_table_name(cls, make_plural=True):
-        return 'answers'
+        return 'question_options'
