@@ -38,7 +38,7 @@ def get_questions(survey_id: int, db: Session = Depends(get_db), c_user: User = 
     return questions
 
 
-@router.post('/surveys/', response_model=SurveyDetailsSchema)
+@router.post('/surveys/', response_model=SurveyDetailsSchema, status_code=201)
 def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
                   current_user: User = Depends(get_current_user)):
     _survey = Survey(
