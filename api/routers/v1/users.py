@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.params import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from starlette.requests import Request
 
 from api.core.auth import authenticate, create_access_token, get_current_user
 from api.core.database import get_db
@@ -29,7 +30,7 @@ def user_login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = D
 
 
 @router.get(path='/users/', response_model=List[UserListSchema], status_code=200)
-def get_users(db: Session = Depends(get_db)):
+def get_users(db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
     users = User.objects(db).all()
     return users
 
@@ -51,6 +52,5 @@ def create_user(user: UserCreateSchema, db: Session = Depends(get_db)):
 
 
 @router.get(path='/me/', response_model=UserListSchema, status_code=200)
-def get_login_user(db: Session = Depends(get_db),
-                   current_user: User = Depends(get_current_user)):
+def get_login_user(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return current_user

@@ -1,4 +1,9 @@
+from typing import Any
+
 from sqlalchemy import Column, Integer, String, Boolean
+from sqlalchemy.orm import Session
+from starlette.authentication import UnauthenticatedUser
+from starlette.requests import Request
 
 from api.core.access_control import DataAccessQueryModelManager
 from api.core.model_base import ModelBase

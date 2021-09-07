@@ -1,15 +1,9 @@
-from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
-from api.core.database import get_db
+from starlette.requests import Request
 
 
 class DataAccessQueryModelManager:
 
     @classmethod
-    def objects(cls, session: Session):
+    def objects(cls, session: Session, request: Request = None):
         return session.query(cls)
-
-    @classmethod
-    def default_user_filter(cls) -> str:
-        return ''

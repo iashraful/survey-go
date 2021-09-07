@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.authentication import AuthenticationMiddleware
 
 from api import routers
-from api.core.auth import BearerTokenAuthBackend
 from api.core.config import settings
 
 app = FastAPI()
@@ -23,9 +22,9 @@ app.add_middleware(
 )
 
 
-@app.on_event('startup')
-async def startup():
-    app.add_middleware(AuthenticationMiddleware, backend=BearerTokenAuthBackend())
+# @app.on_event('startup')
+# async def startup():
+#     app.add_middleware(AuthenticationMiddleware, backend=BearerTokenAuthBackend())
 
 
 @app.get("/")

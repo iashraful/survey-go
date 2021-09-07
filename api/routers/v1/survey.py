@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
+from starlette.requests import Request
 
 from api.core.auth import get_current_user
 from api.core.database import get_db
@@ -14,18 +15,19 @@ router = APIRouter()
 
 @router.get('/surveys/', response_model=List[SurveySchema])
 def get_surveys(db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
-    surveys = Survey.objects(db).filter_by(user_id=c_user.id).order_by(Survey.published_time.desc()).all()
+    surveys = Survey.objects(session=db).filter_by(
+        user_id=c_user.id).order_by(Survey.published_time.desc()).all()
     return surveys
 
 
 @router.get('/surveys/{survey_id}/', response_model=SurveyDetailsSchema)
-def get_survey_details(survey_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def get_survey_details(survey_id: int, db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
     survey_details = Survey.objects(db).get(ident=survey_id)
     return survey_details
 
 
 @router.get('/questions/{survey_id}/', response_model=List[SurveyQuestionSchema])
-def get_questions(survey_id: int, db: Session = Depends(get_db)):
+def get_questions(survey_id: int, db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
     """
     Get Questions for a specific survey
     :param survey_id: This is survey ID
