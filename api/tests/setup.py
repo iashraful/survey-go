@@ -1,3 +1,5 @@
+from api.models.survey import Survey, SurveyQuestion
+from api.models.user import User
 import os
 
 import pytest
@@ -13,7 +15,8 @@ from api.main import app
 SQLALCHEMY_DATABASE_URL = os.environ.get('TESTING_DB_CONN_STRING')
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine)
 
 # Set up the database once
 ModelBase.metadata.drop_all(bind=engine)
@@ -70,3 +73,55 @@ def auth_token(client):
         })
         if response.status_code == 200:
             yield response.json()['access_token']
+
+
+@pytest.fixture()
+def test_data(client, session):
+    """
+    This fixures is mean to create some test data as the dependency of the each unit of
+    tests. We will always access the with O(n) time. The data format is following...
+    {
+        'KEY': [ # A key is must be the model name. i.e: User.__name__
+            # A list of objects
+            {
+                id: 1,
+                name: 'test maybe'
+            }
+        ]
+    }
+    """
+    # Create Test users
+    _users = []
+    for i in range(1, 4):
+        user_create_response = client.post('/api/v1/users/', json={
+            'name': f'Tester {i}',
+            'email': f'test{i}@mail.com',
+            'password': '1234',
+            'confirm_password': '1234'
+        })
+        _users.append(user_create_response.json())
+    # Create Surveys
+    _surveys = []
+    for i in range(1, 4):
+        survey = Survey(name=f'Test {i}', instructions=f'Instruction {i}')
+        session.add(survey)
+        session.commit()
+        _surveys.append({
+            'id': survey.id,
+            'name': survey.name
+        })
+    # Create Questions
+    _questions = []
+    for i in range(1, 8):
+        ques = SurveyQuestion(text=f'Test {i}', type='text')
+        session.add(ques)
+        session.commit()
+        _questions.append({
+            'id': ques.id,
+            'text': ques.text
+        })
+    yield {
+        User.__name__: _users,
+        Survey.__name__: _surveys,
+        SurveyQuestion.__name__: _questions,
+    }

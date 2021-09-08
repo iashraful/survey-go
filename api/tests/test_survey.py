@@ -1,4 +1,6 @@
-from .setup import client, session, auth_token
+from api.enums.survey_enums import QuestionTypeEnum
+
+from .setup import auth_token, client, session
 
 
 def test_create_survey(client, auth_token):
@@ -9,7 +11,7 @@ def test_create_survey(client, auth_token):
             {
                 "text": "What's you name?",
                 "text_translation": "What's you name?",
-                "type": "text",
+                "type": QuestionTypeEnum.Text.value,
                 "options": [
 
                 ]
@@ -17,7 +19,7 @@ def test_create_survey(client, auth_token):
             {
                 "text": "What's your favorite from following?",
                 "text_translation": "",
-                "type": "single_select",
+                "type": QuestionTypeEnum.SingleSelect.value,
                 "options": [
                     {
                         "name": "Apple",
@@ -35,12 +37,14 @@ def test_create_survey(client, auth_token):
             }
         ]
     }
-    response = client.post('/api/v1/surveys/', json=json_data, headers={'Authorization': f'Bearer {auth_token}'})
+    response = client.post('/api/v1/surveys/', json=json_data,
+                           headers={'Authorization': f'Bearer {auth_token}'})
     assert response.status_code == 201
 
 
 def test_get_survey_list(client, auth_token):
-    response = client.get('/api/v1/surveys/', headers={'Authorization': f'Bearer {auth_token}'})
+    response = client.get('/api/v1/surveys/',
+                          headers={'Authorization': f'Bearer {auth_token}'})
     assert response.status_code == 200
 
 
