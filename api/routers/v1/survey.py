@@ -1,14 +1,15 @@
 from typing import List
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 from starlette.requests import Request
 
 from api.core.auth import get_current_user
 from api.core.database import get_db
-from api.models import Survey, SurveyQuestion, User, QuestionOption
-from api.schemas.v1.survey import SurveySchema, SurveyQuestionSchema, SurveyCreateSchema, SurveyDetailsSchema
+from api.enums.survey_enums import QuestionTypeEnum
+from api.models import QuestionOption, Survey, SurveyQuestion, User
+from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema
 
 router = APIRouter()
 
@@ -48,6 +49,11 @@ def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
     db.commit()
     _ques_option_list = []
     for question in survey.questions:
+        if question.type not in QuestionTypeEnum.list_of_values():
+            raise HTTPException(
+                status_code=400,
+                detail='Question Type doesn\'t found.'
+            )
         _ques = SurveyQuestion(
             text=question.text, text_translation=question.text_translation,
             type=question.type, survey_id=_survey.id

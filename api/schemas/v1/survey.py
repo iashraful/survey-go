@@ -87,3 +87,12 @@ class SurveyDetailsSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class SurveyQuestionBasicSchema(BaseModel):
+    id: int
+    text: str
+    text_translation: str
+
+    class Config:
+        orm_mode = True

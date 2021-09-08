@@ -1,6 +1,5 @@
-from enum import Enum
+from api.enums.base import BaseEnum
 
-
-class UserStatusEnum(Enum):
+class UserStatusEnum(BaseEnum):
     Active = 'Active'
     InActive = 'InActive'

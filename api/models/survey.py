@@ -16,9 +16,9 @@ class Survey(ModelBase):
 
     # Define relationship
     questions = relationship(
-        "SurveyQuestion", cascade="all",
-        back_populates="survey",
+        "SurveyQuestion", back_populates="survey",
     )
+    responses = relationship("SurveyResponse", back_populates='survey')
 
     @classmethod
     def get_table_name(cls, make_plural=True):

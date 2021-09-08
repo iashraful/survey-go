@@ -1,13 +1,15 @@
 from enum import Enum
 
+from api.enums.base import BaseEnum
 
-class SurveyStatusEnum(Enum):
+
+class SurveyStatusEnum(BaseEnum):
     Draft: str = 'Draft'
     Published: str = 'Published'
     Archived: str = 'Archived'
 
 
-class QuestionTypeEnum(Enum):
+class QuestionTypeEnum(BaseEnum):
     Text: str = 'text'
     Number: str = 'number'
     SingleSelect: str = 'single_select'
@@ -17,4 +19,3 @@ class QuestionTypeEnum(Enum):
     PhoneNumber: str = 'phone_number'
     Image: str = 'image'
     File: str = 'file'
-
