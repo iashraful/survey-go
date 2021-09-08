@@ -1,5 +1,11 @@
 # WE MUST IMPORT ALL THE FIXTURES WE HAVE DEFINED DURING SETUP PHASE
-from .test_setup import client, session, auth_token
+from .setup import client, session, auth_token
+
+
+def test_health(client):
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.json()['Health'] == 'OK!'
 
 
 def test_user_create(client):

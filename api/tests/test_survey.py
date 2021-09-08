@@ -1,4 +1,4 @@
-from .test_setup import client, session, auth_token
+from .setup import client, session, auth_token
 
 
 def test_create_survey(client, auth_token):
