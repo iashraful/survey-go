@@ -14,8 +14,7 @@ export default [
     meta: {
       identifier: 'dashboard',
       middleware: [
-        middlewares.isAuthenticated,
-        middlewares.hasPermission
+        middlewares.isAuthenticated
       ]
     }
   },
