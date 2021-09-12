@@ -1,36 +1,37 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import store from '../store'
+import routes from './routes'
+import middlewarePipeline from '../middlewares/middleware-pipeline'
+import predefinedMiddlewares from '../middlewares/predefined-middlewares'
 
 Vue.use(VueRouter)
-
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../components/auth/Login.vue')
-  },
-  {
-    path: '/signup',
-    name: 'Signup',
-    component: () => import(/* webpackChunkName: "signup" */ '../components/auth/Signup.vue')
-  }
-]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  let middlewares = to.meta.middleware
+  if (!middlewares) {
+    middlewares = [
+      predefinedMiddlewares.request
+    ]
+  }
+
+  const context = {
+    to,
+    from,
+    next,
+    store
+  }
+
+  return middlewares[0]({
+    ...context,
+    next: middlewarePipeline(context, middlewares, 1)
+  })
 })
 
 export default router

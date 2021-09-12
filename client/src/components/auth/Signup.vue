@@ -1,7 +1,7 @@
 <template>
 <section class="hero is-fullheight">
   <div class="hero-body">
-    <div class="container" style="top: -10rem">
+    <div class="container" style="top: -7rem">
       <div class="columns is-centered">
         <div class="column is-5-tablet is-4-desktop is-3-widescreen">
           <h2 style="text-align: center; font-size: 1.5rem; margin-bottom: 5px;">Welcome to SurveyGo!</h2>
