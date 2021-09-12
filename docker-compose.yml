@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 
 services:
   survey_db:
@@ -12,7 +12,7 @@ services:
     expose:
       - 5432
     ports:
-    - '5440:5432'
+      - "5440:5432"
     volumes:
       - ./postgres_data:/var/lib/postgresql/data/
 
@@ -31,7 +31,7 @@ services:
     expose:
       - 8000
     ports:
-      - '8081:8000'
+      - "8081:8000"
     depends_on:
       - survey_db
 
@@ -46,13 +46,13 @@ services:
   client:
     build: ./client
     restart: always
-    container_name: survey_react_client
-    command: sh -c "yarn install && yarn start"
+    container_name: survey_client
+    command: sh -c "yarn install && yarn serve"
     working_dir: /app/client
     volumes:
       - ./client:/app/client:cached
     ports:
-      - '8082:3000'
+      - "8082:8080"
 
 networks:
   survey_network:
