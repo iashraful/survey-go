@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <top-navbar />
+    <div class="container" style="margin-top: .5rem">
+      <router-view/>
     </div>
-    <router-view/>
   </div>
 </template>
 
-<style>
+<script>
+import TopNavbar from './components/common/TopNavbar.vue'
 
-</style>
+export default {
+  name: 'App',
+  components: { TopNavbar }
+}
+</script>
