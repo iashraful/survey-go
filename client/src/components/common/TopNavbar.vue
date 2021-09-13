@@ -9,6 +9,9 @@
             <b-navbar-item to="/" tag="router-link">
                 Home
             </b-navbar-item>
+            <b-navbar-item to="/surveys" tag="router-link">
+                Surveys
+            </b-navbar-item>
             <b-navbar-item to="/about" tag="router-link">
                 About
             </b-navbar-item>

@@ -8,6 +8,26 @@ export default [
     component: Home
   },
   {
+    path: '/surveys',
+    name: 'SurveyListView',
+    component: () => import(/* webpackChunkName: "survey-list" */ '../views/survey/SurveyListView.vue'),
+    meta: {
+      middleware: [
+        middlewares.isAuthenticated
+      ]
+    }
+  },
+  {
+    path: '/surveys/create',
+    name: 'SurveyCreateView',
+    component: () => import(/* webpackChunkName: "survey-create" */ '../views/survey/SurveyCreateView.vue'),
+    meta: {
+      middleware: [
+        middlewares.isAuthenticated
+      ]
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
