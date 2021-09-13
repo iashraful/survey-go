@@ -2,6 +2,10 @@
   <div id="app">
     <top-navbar />
     <div class="container" style="margin-top: .5rem">
+      <b-message
+        v-if="routeWarning" auto-close type="is-danger" :duration="5000">
+          {{ routeWarning }}
+      </b-message>
       <router-view/>
     </div>
   </div>
@@ -12,6 +16,15 @@ import TopNavbar from './components/common/TopNavbar.vue'
 
 export default {
   name: 'App',
-  components: { TopNavbar }
+  components: { TopNavbar },
+  data () {
+    return {
+      routeWarning: ''
+    }
+  },
+  mounted () {
+    // Check for route warning
+    this.routeWarning = this.$route.query.warning
+  }
 }
 </script>

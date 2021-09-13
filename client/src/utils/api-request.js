@@ -12,12 +12,7 @@ export const _get = async function ({ path, noToken = false }) {
     _headers.Authentication = `Bearer ${store.getters.getAccessToken}`
   }
   const url = makeApiUrl(path)
-  try {
-    const response = await Axios.post(url, _headers)
-    return response
-  } catch (e) {
-    return e.response
-  }
+  return await Axios.post(url, _headers)
 }
 
 export const _post = async function ({ path, data, noToken = false }) {
@@ -26,10 +21,5 @@ export const _post = async function ({ path, data, noToken = false }) {
     _headers.Authentication = `Bearer ${store.getters.getAccessToken}`
   }
   const url = makeApiUrl(path)
-  try {
-    const response = await Axios.post(url, data, _headers)
-    return response
-  } catch (e) {
-    return e.response
-  }
+  return await Axios.post(url, data, _headers)
 }

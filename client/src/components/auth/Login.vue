@@ -28,6 +28,9 @@
                 </span>
               </div>
             </div>
+            <b-message type="is-danger" v-if="apiErrorData && apiErrorData.detail">
+              {{ apiErrorData.detail }}
+            </b-message>
             <div class="field">
               <router-link to="forgot-password">Forgotten your password??</router-link>
             </div>
@@ -51,7 +54,8 @@ export default {
   name: 'Login',
   data () {
     return {
-      formData: {}
+      formData: {},
+      apiErrorData: {}
     }
   },
   methods: {
@@ -63,10 +67,12 @@ export default {
           this.$store.dispatch('updateAccessToken', response.data.access_token)
           if (onSuccessRedirect) {
             this.$router.push(onSuccessRedirect)
+          } else {
+            this.$router.push('/')
           }
         }
       } catch (e) {
-        console.log(e.response)
+        this.apiErrorData = e.response.data
       }
     }
   }

@@ -17,14 +17,37 @@
         <template #end>
           <b-navbar-item tag="div">
             <div class="buttons">
-              <router-link class="button is-primary" to='/signup'>
+              <router-link v-if="!isAuthenticated" class="button is-primary" to='/signup'>
                 <strong>Sign up</strong>
               </router-link>
-              <router-link class="button is-light" to='/login'>
+              <router-link v-if="!isAuthenticated" class="button is-light" to='/login'>
                 Log in
               </router-link>
+              <button v-if="isAuthenticated" class="button is-light" @click="logout">
+                Logout
+              </button>
             </div>
           </b-navbar-item>
         </template>
     </b-navbar>
 </template>
+
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+  name: 'TopNavbar',
+  computed: {
+    ...mapGetters(['isAuthenticated'])
+  },
+  data () {
+    return {}
+  },
+  methods: {
+    logout () {
+      this.$store.dispatch('triggerLogout')
+      this.$router.push('/')
+    }
+  }
+}
+</script>

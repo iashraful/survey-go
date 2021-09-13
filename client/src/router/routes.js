@@ -12,7 +12,6 @@ export default [
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
     meta: {
-      identifier: 'dashboard',
       middleware: [
         middlewares.isAuthenticated
       ]
@@ -21,11 +20,21 @@ export default [
   {
     path: '/login',
     name: 'Login',
-    component: () => import(/* webpackChunkName: "login" */ '../components/auth/Login.vue')
+    component: () => import(/* webpackChunkName: "login" */ '../components/auth/Login.vue'),
+    meta: {
+      middleware: [
+        middlewares.publicOnly
+      ]
+    }
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: () => import(/* webpackChunkName: "signup" */ '../components/auth/Signup.vue')
+    component: () => import(/* webpackChunkName: "signup" */ '../components/auth/Signup.vue'),
+    meta: {
+      middleware: [
+        middlewares.publicOnly
+      ]
+    }
   }
 ]

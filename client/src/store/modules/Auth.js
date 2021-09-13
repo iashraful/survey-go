@@ -13,13 +13,12 @@ const mutations = {
   logout (state) {
     state.auth = false
     state.accessToken = null
-    localStorage.setItem('accessToken', undefined)
+    localStorage.removeItem('accessToken')
   }
 }
 
 const actions = {
   updateAccessToken ({ commit }, payload) {
-    console.log(payload)
     localStorage.setItem('accessToken', payload)
     commit('updateAccessToken', payload)
     commit('updateLoginStatus', true)
