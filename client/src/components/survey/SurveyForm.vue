@@ -16,7 +16,6 @@
             :questions="formData.questions"
             @onQuestionRemove="removeQuestionByIdentity"
             @onQuestionUpdate="updateQuestionByIdentity"
-            :submitted="formSubmit"
           />
           <div class="add-more-btn">
             <b-button
@@ -47,7 +46,6 @@ export default {
   components: { SurveyQuestionFormSet },
   data () {
     return {
-      formSubmit: false,
       formData: {
         name: '',
         questions: []
@@ -56,10 +54,8 @@ export default {
   },
   methods: {
     saveSurvey () {
-      this.formSubmit = true
       console.log('Survey Form')
       console.log(this.formData)
-      // TODO: We must set formSubmit =false if there is any error or user needed to edit the form
     },
     addMoreQuestion () {
       this.formData.questions.push(

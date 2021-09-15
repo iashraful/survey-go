@@ -47,10 +47,6 @@ export default {
     identity: {
       type: Number,
       required: true
-    },
-    submitted: {
-      type: Boolean,
-      default: false
     }
   },
   data () {
@@ -68,18 +64,13 @@ export default {
     }
   },
   watch: {
-    // question: {
-    //   handler (newValue) {
-    //     console.log(newValue)
-    //     this.question = newValue
-    //     this.$emit('updateQuestion', { identity: this.identity, data: newValue })
-    //   },
-    //   deep: true
-    // }
-    submitted (newValue) {
-      if (newValue === true) {
-        this.$emit('updateQuestion', { identity: this.identity, data: this.question })
-      }
+    question: {
+      handler (newValue) {
+        console.log(newValue)
+        this.question = newValue
+        this.$emit('updateQuestion', { identity: this.identity, data: newValue })
+      },
+      deep: true
     }
   }
 }

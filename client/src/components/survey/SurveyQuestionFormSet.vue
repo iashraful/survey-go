@@ -5,7 +5,6 @@
       :index="_i" :identity="ques.__id"
       @updateQuestion="dataPassToParentOnUpdate"
       @removeQuestion="dataPassToParentOnRemove"
-      :submitted="submitted"
     />
   </div>
 </template>
@@ -21,10 +20,6 @@ export default {
       type: Array,
       required: true,
       default: () => []
-    },
-    submitted: {
-      type: Boolean,
-      default: false
     }
   },
   methods: {
@@ -33,13 +28,6 @@ export default {
     },
     dataPassToParentOnRemove (identity) {
       this.$emit('onQuestionRemove', identity)
-    }
-  },
-  watch: {
-    submitted (newValue) {
-      if (newValue === true) {
-        this.$emit('dataFinalUpdate', this.questions)
-      }
     }
   }
 }
