@@ -20,9 +20,9 @@
         <b-select placeholder="Select a name" v-model="question.type" expanded size="is-small">
           <option
             v-for="option in questionsTypes"
-            :value="option"
-            :key="option">
-            {{ option }}
+            :value="option.value"
+            :key="option.value">
+            {{ option.title }}
           </option>
         </b-select>
       </b-field>
@@ -33,10 +33,30 @@
         <b-input v-model="question.text_translation" size="is-small"></b-input>
       </b-field>
     </div>
+
+    <div class="question-options">
+      <question-option-form
+        v-for="(opt, _i) in question.options" :key="opt.__id"
+        :index="_i" :identity="opt.__id"
+        @onOptionRemove="handleOptionRemove"
+        @onOptionUpdate="handleOptionUpdate"
+      />
+      <div class="option-actions">
+        <b-button
+          @click="handleOptionAdd"
+          size="is-small" icon-pack="fa"
+          type="is-info" icon-left="plus">
+          Another Option
+        </b-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
+import QuestionOptionForm from './QuestionOptionForm.vue'
+
 export default {
   name: 'SurveyQuestionForm',
   props: {
@@ -45,29 +65,55 @@ export default {
       required: true
     },
     identity: {
-      type: Number,
+      type: String,
       required: true
     }
   },
+  components: { QuestionOptionForm },
   data () {
     return {
-      question: { text: '', text_translation: '', type: 'text', __id: this.identity },
+      question: {
+        text: '',
+        text_translation: '',
+        type: 'text',
+        __id: uuidv4(),
+        options: [
+          { name: '', __id: uuidv4() },
+          { name: '', __id: uuidv4() }
+        ]
+      },
       questionsTypes: [
-        'text', 'single_select', 'multiple_select',
-        'number', 'email'
+        { title: 'Text', value: 'text' },
+        { title: 'Single Choice', value: 'single_select' },
+        { title: 'Multiple Choice', value: 'multiple_select' },
+        { title: 'Number', value: 'number' },
+        { title: 'Email', value: 'email' }
       ]
     }
   },
   methods: {
     handleQuestionRemove () {
       this.$emit('removeQuestion', this.identity)
+    },
+    handleOptionRemove (identity) {
+      const _index = this.question.options.findIndex(i => i.__id === identity)
+      if (_index !== -1) {
+        this.question.options.splice(_index, 1)
+      }
+    },
+    handleOptionUpdate ({ identity, data }) {
+      const _index = this.question.options.findIndex(i => identity === i.__id)
+      if (_index !== -1) {
+        this.question.options[_index] = data
+      }
+    },
+    handleOptionAdd () {
+      this.question.options.push({ name: '', __id: uuidv4() })
     }
   },
   watch: {
     question: {
       handler (newValue) {
-        console.log(newValue)
-        this.question = newValue
         this.$emit('updateQuestion', { identity: this.identity, data: newValue })
       },
       deep: true
@@ -102,5 +148,11 @@ export default {
 }
 .question .subtitle{
   margin-bottom: 3px;;
+}
+
+.question-options .option-actions {
+  margin: 5px 5px 0 0;
+  display: block;
+  text-align: right;
 }
 </style>

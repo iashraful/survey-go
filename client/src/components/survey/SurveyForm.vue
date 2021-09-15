@@ -29,9 +29,8 @@
 
         <div class="survey-action-btns">
           <b-button
-            @click="saveSurvey"
             icon-pack="fa" class="is-primary"
-            icon-left="save" type="submit">Save</b-button>
+            icon-left="save" native-type="submit">Save</b-button>
         </div>
       </div>
     </form>
@@ -39,6 +38,7 @@
 </template>
 
 <script>
+import { v4 as uuidv4 } from 'uuid'
 import SurveyQuestionFormSet from './SurveyQuestionFormSet.vue'
 
 export default {
@@ -48,27 +48,59 @@ export default {
     return {
       formData: {
         name: '',
-        questions: []
+        questions: [
+          {
+            text: '',
+            text_translation: '',
+            type: 'text',
+            __id: uuidv4(),
+            options: [
+              { name: '' },
+              { name: '' }
+            ]
+          }
+        ]
       }
     }
   },
   methods: {
+    checkValidation () {
+      let valid = true
+      let msg = ''
+      if (this.formData.questions.length === 0) {
+        valid = false
+        msg = 'A good survey should consist of one or more questions.'
+      }
+      return { status: valid, message: msg }
+    },
     saveSurvey () {
-      console.log('Survey Form')
-      console.log(this.formData)
+      const validation = this.checkValidation()
+      if (validation.status) {
+        console.log('Survey Form')
+        console.log(this.formData)
+      } else {
+        this.$buefy.toast.open({
+          message: validation.message,
+          type: 'is-danger'
+        })
+      }
     },
     addMoreQuestion () {
       this.formData.questions.push(
-        { text: '', text_translation: '', type: 'text', __id: new Date().getTime() }
+        { text: '', text_translation: '', type: 'text', __id: uuidv4() }
       )
     },
     updateQuestionByIdentity ({ identity, data }) {
       const _index = this.formData.questions.findIndex(i => identity === i.__id)
-      this.formData.questions[_index] = data
+      if (_index !== -1) {
+        this.formData.questions[_index] = data
+      }
     },
     removeQuestionByIdentity (identity) {
       const _index = this.formData.questions.findIndex(i => identity === i.__id)
-      this.formData.questions.splice(_index, 1)
+      if (_index !== -1) {
+        this.formData.questions.splice(_index, 1)
+      }
     }
   }
 }
