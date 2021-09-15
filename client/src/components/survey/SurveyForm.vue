@@ -39,11 +39,14 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
+import { _post } from '@/utils/api-request'
 import SurveyQuestionFormSet from './SurveyQuestionFormSet.vue'
+import SurveyMixin from '../../mixins/SurveyMixin'
 
 export default {
   name: 'SurveyForm',
   components: { SurveyQuestionFormSet },
+  mixins: [SurveyMixin],
   data () {
     return {
       formData: {
@@ -73,11 +76,27 @@ export default {
       }
       return { status: valid, message: msg }
     },
-    saveSurvey () {
+    async saveSurvey () {
       const validation = this.checkValidation()
       if (validation.status) {
+        const serializableData = this.parseFinalSurveyForAPI(this.formData)
         console.log('Survey Form')
-        console.log(this.formData)
+        console.log(serializableData)
+        try {
+          const response = await _post({ path: '/v1/surveys/', data: serializableData })
+          if (response.status === 201) {
+            this.$buefy.toast.open({
+              message: 'Survey saved successful.',
+              type: 'is-success'
+            })
+            this.$router.push('/surveys')
+          }
+        } catch (e) {
+          this.$buefy.toast.open({
+            message: e.response.data.msg,
+            type: 'is-danger'
+          })
+        }
       } else {
         this.$buefy.toast.open({
           message: validation.message,
