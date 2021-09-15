@@ -6,6 +6,7 @@
       </div>
       <div class="ques-action">
         <b-button
+          v-if="showQuestionRemoveButton()"
           @click="handleQuestionRemove"
           size="is-small" icon-pack="fa"
           type="is-danger" icon-left="trash">
@@ -34,10 +35,11 @@
       </b-field>
     </div>
 
-    <div class="question-options">
+    <div class="question-options" v-if="showOptionForm()">
       <question-option-form
         v-for="(opt, _i) in question.options" :key="opt.__id"
         :index="_i" :identity="opt.__id"
+        :option-count="question.options.length"
         @onOptionRemove="handleOptionRemove"
         @onOptionUpdate="handleOptionUpdate"
       />
@@ -66,6 +68,10 @@ export default {
     },
     identity: {
       type: String,
+      required: true
+    },
+    questionCount: {
+      type: Number,
       required: true
     }
   },
@@ -109,6 +115,14 @@ export default {
     },
     handleOptionAdd () {
       this.question.options.push({ name: '', __id: uuidv4() })
+    },
+    showQuestionRemoveButton () {
+      if (this.index !== 0 || this.questionCount > 1) {
+        return true
+      }
+    },
+    showOptionForm () {
+      return ['single_select', 'multiple_select'].includes(this.question.type)
     }
   },
   watch: {

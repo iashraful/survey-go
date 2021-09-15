@@ -3,6 +3,7 @@
     <survey-question-form
       v-for="(ques, _i) in questions" :key="ques.__id"
       :index="_i" :identity="ques.__id"
+      :question-count="questions.length"
       @updateQuestion="dataPassToParentOnUpdate"
       @removeQuestion="dataPassToParentOnRemove"
     />

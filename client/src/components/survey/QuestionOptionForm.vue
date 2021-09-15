@@ -7,6 +7,7 @@
     </div>
     <div class="option-action">
       <b-button
+        v-if="showOptionRemoveButton()"
         @click="handleRemoveOption"
         size="is-small" icon-pack="fa"
         type="is-danger" icon-left="trash">
@@ -23,6 +24,10 @@ export default {
       type: Number,
       required: true
     },
+    optionCount: {
+      type: Number,
+      required: true
+    },
     identity: {
       type: String,
       required: true
@@ -36,6 +41,11 @@ export default {
   methods: {
     handleRemoveOption () {
       this.$emit('onOptionRemove', this.identity)
+    },
+    showOptionRemoveButton () {
+      if (this.index !== 0 || this.optionCount > 1) {
+        return true
+      }
     }
   },
   watch: {
