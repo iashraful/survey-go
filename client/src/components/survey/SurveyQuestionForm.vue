@@ -82,7 +82,7 @@ export default {
         text: '',
         text_translation: '',
         type: 'text',
-        __id: uuidv4(),
+        __id: this.identity,
         options: [
           { name: '', __id: uuidv4() },
           { name: '', __id: uuidv4() }
