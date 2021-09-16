@@ -1,3 +1,4 @@
+from api.models.survey import SurveySection
 from typing import List
 
 from fastapi import APIRouter, HTTPException
@@ -43,28 +44,35 @@ def get_questions(survey_id: int, db: Session = Depends(get_db), c_user: User = 
 def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
                   current_user: User = Depends(get_current_user)):
     _survey = Survey(
-        user_id=current_user.id, name=survey.name, instructions=survey.instructions
+        user_id=current_user.id, name=survey.name, instructions=survey.instructions,
+        status=survey.status
     )
     db.add(_survey)
     db.commit()
     _ques_option_list = []
-    for question in survey.questions:
-        if question.type not in QuestionTypeEnum.list_of_values():
-            raise HTTPException(
-                status_code=400,
-                detail='Question Type doesn\'t found.'
-            )
-        _ques = SurveyQuestion(
-            text=question.text, text_translation=question.text_translation,
-            type=question.type, survey_id=_survey.id
-        )
-        db.add(_ques)
+    for section in survey.sections:
+        _sec = SurveySection(name=section.name, survey_id=_survey.id)
+        db.add(_sec)
         db.commit()
-        for opt in question.options:
-            _ques_option_list.append(QuestionOption(
-                name=opt.name, name_translation=opt.name_translation,
-                question_id=_ques.id
-            ))
+
+        for question in section.questions:
+            if question.type not in QuestionTypeEnum.list_of_values():
+                raise HTTPException(
+                    status_code=400,
+                    detail='Question Type doesn\'t found.'
+                )
+            _ques = SurveyQuestion(
+                text=question.text, text_translation=question.text_translation,
+                type=question.type, survey_id=_survey.id, section_id=_sec.id,
+                status=question.status, is_required=question.is_required
+            )
+            db.add(_ques)
+            db.commit()
+            for opt in question.options:
+                _ques_option_list.append(QuestionOption(
+                    name=opt.name, name_translation=opt.name_translation,
+                    question_id=_ques.id
+                ))
     db.bulk_save_objects(_ques_option_list)
     db.commit()
     db.refresh(_survey)

@@ -1,7 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
+from api.enums.survey_enums import SurveyStatusEnum
 from api.schemas.v1.user import UserBasicSchema
 
 
@@ -10,7 +11,7 @@ class SurveySchema(BaseModel):
     user_id: int
     name: str
     instructions: str
-    status: str
+    status: Optional[str] = SurveyStatusEnum.Draft.value
 
     class Config:
         orm_mode = True
@@ -40,7 +41,17 @@ class SurveyQuestionCreateSchema(BaseModel):
     text: str
     text_translation: str
     type: str
+    status: Optional[str] = SurveyStatusEnum.Draft.value
+    is_required: Optional[bool] = False
     options: List[QuestionOptionCreateSchema]
+
+    class Config:
+        orm_mode = True
+
+
+class SurveySectionCreateSchema(BaseModel):
+    name: str
+    questions: List[SurveyQuestionCreateSchema]
 
     class Config:
         orm_mode = True
@@ -49,7 +60,8 @@ class SurveyQuestionCreateSchema(BaseModel):
 class SurveyCreateSchema(BaseModel):
     name: str
     instructions: str
-    questions: List[SurveyQuestionCreateSchema]
+    status: Optional[str] = SurveyStatusEnum.Draft.value
+    sections: List[SurveySectionCreateSchema]
 
     class Config:
         orm_mode = True
@@ -69,8 +81,17 @@ class SurveyQuestionDetailsSchema(BaseModel):
     id: int
     text: str
     text_translation: str
-    status: str
+    status: Optional[str]
+    is_required: Optional[bool]
     options: List[QuestionOptionDetailsSchema]
+
+    class Config:
+        orm_mode = True
+
+
+class SurveySectionDetailsSchema(BaseModel):
+    name: str
+    questions: List[SurveyQuestionDetailsSchema]
 
     class Config:
         orm_mode = True
@@ -82,8 +103,8 @@ class SurveyDetailsSchema(BaseModel):
     user: UserBasicSchema
     name: str
     instructions: str
-    status: str
-    questions: List[SurveyQuestionDetailsSchema]
+    status: Optional[str]
+    sections: List[SurveySectionDetailsSchema]
 
     class Config:
         orm_mode = True

@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import null
 
 from api.core.model_base import ModelBase
 from api.enums.survey_enums import SurveyStatusEnum
@@ -11,13 +12,14 @@ class Survey(ModelBase):
     user = relationship("User")
     name = Column(String)
     instructions = Column(String, nullable=True)
-    status = Column(String, default=SurveyStatusEnum.Draft.value)
+    status = Column(String)
     published_time = Column(DateTime, nullable=True)
 
     # Define relationship
     questions = relationship(
         "SurveyQuestion", back_populates="survey",
     )
+    sections = relationship("SurveySection", back_populates='survey')
     responses = relationship("SurveyResponse", back_populates='survey')
 
     @classmethod
@@ -25,21 +27,43 @@ class Survey(ModelBase):
         return 'surveys'
 
 
+class SurveySection(ModelBase):
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    survey_id = Column(Integer, ForeignKey('surveys.id'))
+    # Define relationship
+    questions = relationship(
+        "SurveyQuestion", back_populates="section",
+    )
+    survey = relationship(
+        "Survey", back_populates="sections",
+    )
+
+    @classmethod
+    def get_table_name(cls, make_plural=True):
+        return 'sections'
+
+
 class SurveyQuestion(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     survey_id = Column(Integer, ForeignKey('surveys.id'))
-    survey = relationship(
-        "Survey", cascade="all",
-        back_populates="questions",
-    )
+    section_id = Column(Integer, ForeignKey('sections.id'))
     text = Column(String)
     text_translation = Column(String, nullable=True)
     type = Column(String)
-    status = Column(String, default=SurveyStatusEnum.Draft.value)
+    status = Column(String)
+    is_required = Column(Boolean, nullable=False)
 
+    # Relationships
     options = relationship(
         "QuestionOption", cascade="all",
         back_populates="question",
+    )
+    section = relationship(
+        "SurveySection", back_populates="questions",
+    )
+    survey = relationship(
+        "Survey", back_populates="questions",
     )
 
     @classmethod
