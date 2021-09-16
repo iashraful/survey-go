@@ -1,0 +1,13 @@
+.d-flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
+@media (max-width: 1023px) {
+  .d-flex-container {
+    flex-direction: column;
+  }
+  .container {
+    margin: 0 1.2rem;
+  }
+}

@@ -2,31 +2,33 @@
   <div class="survey-form">
     <form @submit.prevent="saveSurvey">
       <div class="survey-container">
-        <div class="survey-basic">
-          <b-field label="Survey Name">
-            <b-input v-model="formData.name" required></b-input>
-          </b-field>
-          <b-field label="Instructions">
-            <b-input maxlength="500" type="textarea" v-model="formData.instructions"></b-input>
-          </b-field>
-        </div>
+        <div class="d-flex-container">
+          <div class="survey-basic">
+            <b-field label="Survey Name">
+              <b-input v-model="formData.name" required></b-input>
+            </b-field>
+            <b-field label="Instructions">
+              <b-input maxlength="500" type="textarea" v-model="formData.instructions"></b-input>
+            </b-field>
+          </div>
 
-        <div class="survey-questions">
-          <survey-section-form
-            v-for="(sec, _i) in formData.sections"
-            :key="sec.__id"
-            :index="_i"
-            :identity="sec.__id"
-            @onSectionRemove="handleSectionRemove"
-            @onSectionUpdate="handleSectionUpdate"
-          />
-          <div class="add-more-btn">
-            <b-button
-              @click="addMoreSection"
-              icon-pack="fa" size="is-small"
-              class="is-info" icon-left="plus">
-              Add Section
-            </b-button>
+          <div class="survey-questions">
+            <survey-section-form
+              v-for="(sec, _i) in formData.sections"
+              :key="sec.__id"
+              :index="_i"
+              :identity="sec.__id"
+              @onSectionRemove="handleSectionRemove"
+              @onSectionUpdate="handleSectionUpdate"
+            />
+            <div class="add-more-btn">
+              <b-button
+                @click="addMoreSection"
+                icon-pack="fa" size="is-small"
+                class="is-info" icon-left="plus">
+                Add Section
+              </b-button>
+            </div>
           </div>
         </div>
 
@@ -120,7 +122,7 @@ export default {
 </script>
 
 <style scoped>
-.survey-container {
+/* .survey-container {
   display: block;
   width: 100%;
 }
@@ -135,8 +137,14 @@ export default {
 .survey-container .survey-questions {
   display: inline-block;
   width: 50%;
+} */
+.survey-container .survey-basic {
+  width: 28%
 }
-
+.survey-container .survey-questions {
+  margin-left: 1.8rem;;
+  width: 70%
+}
 .survey-container .survey-action-btns {
   display: block;
   width: 100%;
@@ -145,4 +153,15 @@ export default {
   display: block;
   text-align: right;
 }
+
+@media (max-width: 1023px) {
+  .survey-container .survey-basic {
+  width: 100%;
+}
+.survey-container .survey-questions {
+  margin-left: 0;
+  width: 100%;
+}
+}
+
 </style>
