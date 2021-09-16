@@ -52,6 +52,14 @@
         </b-button>
       </div>
     </div>
+
+    <div class="field">
+      <b-field>
+        <b-checkbox v-model="question.is_required">
+            Is Required
+        </b-checkbox>
+      </b-field>
+    </div>
   </div>
 </template>
 

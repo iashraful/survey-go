@@ -18,6 +18,7 @@
               :key="sec.__id"
               :index="_i"
               :identity="sec.__id"
+              :section-count="formData.sections.length"
               @onSectionRemove="handleSectionRemove"
               @onSectionUpdate="handleSectionUpdate"
             />
@@ -122,22 +123,6 @@ export default {
 </script>
 
 <style scoped>
-/* .survey-container {
-  display: block;
-  width: 100%;
-}
-
-.survey-container .survey-basic {
-  display: inline-block;
-  width: 25%;
-  position: fixed;
-  right: 17.5rem;
-}
-
-.survey-container .survey-questions {
-  display: inline-block;
-  width: 50%;
-} */
 .survey-container .survey-basic {
   width: 28%
 }
@@ -148,6 +133,11 @@ export default {
 .survey-container .survey-action-btns {
   display: block;
   width: 100%;
+  margin: 1rem 0 3rem 0;
+  text-align: center;
+}
+.survey-container .survey-action-btns button {
+  padding: 0 4rem 0 4rem;
 }
 .survey-container .survey-questions .add-more-btn {
   display: block;
@@ -156,12 +146,16 @@ export default {
 
 @media (max-width: 1023px) {
   .survey-container .survey-basic {
-  width: 100%;
-}
-.survey-container .survey-questions {
-  margin-left: 0;
-  width: 100%;
-}
+    width: 100%;
+  }
+  .survey-container .survey-questions {
+    margin-left: 0;
+    width: 100%;
+  }
+  .survey-container .survey-action-btns button {
+    padding: unset;
+    width: 100%;
+  }
 }
 
 </style>

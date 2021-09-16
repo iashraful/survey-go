@@ -73,4 +73,10 @@ export default {
   width: 20%;
   text-align: center;
 }
+
+@media (max-width: 1023px) {
+  .option-form {
+    margin-left: 2rem;
+  }
+}
 </style>

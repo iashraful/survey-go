@@ -9,3 +9,7 @@
 .field .field-label .label {
   font-size: 14px !important;
 }
+
+.field .field-label {
+  flex-grow: 0.5 !important;
+}

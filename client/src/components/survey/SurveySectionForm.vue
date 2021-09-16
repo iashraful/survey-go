@@ -20,6 +20,7 @@
                   :icon="props.open ? 'chevron-up' : 'chevron-down'">
                 </b-icon>
                 <b-button
+                  v-if="showRemoveSectionButton()"
                   @click="handleRemoveSection"
                   size="is-small" icon-pack="fa"
                   type="is-danger" icon-left="times">
@@ -63,6 +64,10 @@ export default {
       required: true
     },
     index: {
+      type: Number,
+      required: true
+    },
+    sectionCount: {
       type: Number,
       required: true
     }
@@ -113,6 +118,9 @@ export default {
       if (_index !== -1) {
         this.section.questions.splice(_index, 1)
       }
+    },
+    showRemoveSectionButton () {
+      return this.index !== 0 || this.sectionCount > 1
     }
   },
   watch: {
