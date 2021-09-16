@@ -99,7 +99,7 @@ export default {
   },
   methods: {
     handleQuestionRemove () {
-      this.$emit('removeQuestion', this.identity)
+      this.$emit('onQuestionRemove', this.identity)
     },
     handleOptionRemove (identity) {
       const _index = this.question.options.findIndex(i => i.__id === identity)
@@ -128,7 +128,7 @@ export default {
   watch: {
     question: {
       handler (newValue) {
-        this.$emit('updateQuestion', { identity: this.identity, data: newValue })
+        this.$emit('onQuestionUpdate', { identity: this.identity, data: newValue })
       },
       deep: true
     }
@@ -147,6 +147,9 @@ export default {
 }
 .question .actions {
   display: block;
+}
+.question .actions .ques-title .subtitle {
+  font-size: 14px;
 }
 .question .actions .ques-title {
   display: inline-block;

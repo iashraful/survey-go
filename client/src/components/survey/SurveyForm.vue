@@ -12,17 +12,20 @@
         </div>
 
         <div class="survey-questions">
-          <survey-question-form-set
-            :questions="formData.questions"
-            @onQuestionRemove="removeQuestionByIdentity"
-            @onQuestionUpdate="updateQuestionByIdentity"
+          <survey-section-form
+            v-for="(sec, _i) in formData.sections"
+            :key="sec.__id"
+            :index="_i"
+            :identity="sec.__id"
+            @onSectionRemove="handleSectionRemove"
+            @onSectionUpdate="handleSectionUpdate"
           />
           <div class="add-more-btn">
             <b-button
-              @click="addMoreQuestion"
+              @click="addMoreSection"
               icon-pack="fa" size="is-small"
               class="is-info" icon-left="plus">
-              Add More
+              Add Section
             </b-button>
           </div>
         </div>
@@ -40,28 +43,19 @@
 <script>
 import { v4 as uuidv4 } from 'uuid'
 import { _post } from '@/utils/api-request'
-import SurveyQuestionFormSet from './SurveyQuestionFormSet.vue'
+import SurveySectionForm from './SurveySectionForm.vue'
 import SurveyMixin from '../../mixins/SurveyMixin'
 
 export default {
   name: 'SurveyForm',
-  components: { SurveyQuestionFormSet },
+  components: { SurveySectionForm },
   mixins: [SurveyMixin],
   data () {
     return {
       formData: {
         name: '',
-        questions: [
-          {
-            text: '',
-            text_translation: '',
-            type: 'text',
-            __id: uuidv4(),
-            options: [
-              { name: '' },
-              { name: '' }
-            ]
-          }
+        sections: [
+          { name: '', __id: uuidv4() }
         ]
       }
     }
@@ -70,7 +64,7 @@ export default {
     checkValidation () {
       let valid = true
       let msg = ''
-      if (this.formData.questions.length === 0) {
+      if (this.formData.sections.length === 0) {
         valid = false
         msg = 'A good survey should consist of one or more questions.'
       }
@@ -104,21 +98,21 @@ export default {
         })
       }
     },
-    addMoreQuestion () {
-      this.formData.questions.push(
-        { text: '', text_translation: '', type: 'text', __id: uuidv4() }
+    addMoreSection () {
+      this.formData.sections.push(
+        { name: '', __id: uuidv4() }
       )
     },
-    updateQuestionByIdentity ({ identity, data }) {
-      const _index = this.formData.questions.findIndex(i => identity === i.__id)
+    handleSectionRemove (identity) {
+      const _index = this.formData.sections.findIndex(i => i.__id === identity)
       if (_index !== -1) {
-        this.formData.questions[_index] = data
+        this.formData.sections.splice(_index, 1)
       }
     },
-    removeQuestionByIdentity (identity) {
-      const _index = this.formData.questions.findIndex(i => identity === i.__id)
+    handleSectionUpdate ({ identity, data }) {
+      const _index = this.formData.sections.findIndex(i => i.__id === identity)
       if (_index !== -1) {
-        this.formData.questions.splice(_index, 1)
+        this.formData.sections[_index] = { __id: identity, ...data }
       }
     }
   }
