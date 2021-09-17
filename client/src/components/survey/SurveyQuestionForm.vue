@@ -91,6 +91,7 @@ export default {
         text_translation: '',
         type: 'text',
         __id: this.identity,
+        is_required: true,
         options: [
           { name: '', __id: uuidv4() },
           { name: '', __id: uuidv4() }

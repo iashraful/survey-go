@@ -7,35 +7,41 @@ def test_create_survey(client, auth_token):
     json_data = {
         "name": "Test Survey",
         "instructions": "As usual to follow...",
-        "questions": [
+        "sections": [
             {
-                "text": "What's you name?",
-                "text_translation": "What's you name?",
-                "type": QuestionTypeEnum.Text.value,
-                "options": [
+                "name": "Test Section",
+                "questions": [
+                    {
+                        "text": "What's you name?",
+                        "text_translation": "What's you name?",
+                        "type": QuestionTypeEnum.Text.value,
+                        "options": [
 
-                ]
-            },
-            {
-                "text": "What's your favorite from following?",
-                "text_translation": "",
-                "type": QuestionTypeEnum.SingleSelect.value,
-                "options": [
-                    {
-                        "name": "Apple",
-                        "name_translation": ""
+                        ]
                     },
                     {
-                        "name": "Money",
-                        "name_translation": ""
-                    },
-                    {
-                        "name": "iPhone",
-                        "name_translation": ""
+                        "text": "What's your favorite from following?",
+                        "text_translation": "",
+                        "type": QuestionTypeEnum.SingleSelect.value,
+                        "options": [
+                            {
+                                "name": "Apple",
+                                "name_translation": ""
+                            },
+                            {
+                                "name": "Money",
+                                "name_translation": ""
+                            },
+                            {
+                                "name": "iPhone",
+                                "name_translation": ""
+                            }
+                        ]
                     }
                 ]
             }
-        ]
+        ],
+        
     }
     response = client.post('/api/v1/surveys/', json=json_data,
                            headers={'Authorization': f'Bearer {auth_token}'})

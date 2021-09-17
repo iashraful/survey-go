@@ -1,5 +1,3 @@
-from api.models.survey import Survey, SurveyQuestion
-from api.models.user import User
 import os
 
 import pytest
@@ -7,10 +5,14 @@ import sqlalchemy
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql.functions import random
 
 from api.core.database import get_db
 from api.core.model_base import ModelBase
+from api.enums.survey_enums import SurveyStatusEnum
 from api.main import app
+from api.models.survey import Survey, SurveyQuestion, SurveySection
+from api.models.user import User
 
 SQLALCHEMY_DATABASE_URL = os.environ.get('TESTING_DB_CONN_STRING')
 
@@ -103,17 +105,33 @@ def test_data(client, session):
     # Create Surveys
     _surveys = []
     for i in range(1, 4):
-        survey = Survey(name=f'Test {i}', instructions=f'Instruction {i}')
+        survey = Survey(
+            name=f'Test {i}', instructions=f'Instruction {i}',
+            status=SurveyStatusEnum.Published.value
+        )
         session.add(survey)
         session.commit()
         _surveys.append({
             'id': survey.id,
             'name': survey.name
         })
+    # Create Sections
+    _sections = []
+    for i in range(1, 3):
+        sec = SurveySection(name=f'Section {i}', survey_id=_surveys[i]['id'])
+        session.add(sec)
+        session.commit()
+        _sections.append({
+            'id': sec.id,
+            'name': sec.name
+        })
     # Create Questions
     _questions = []
     for i in range(1, 8):
-        ques = SurveyQuestion(text=f'Test {i}', type='text')
+        ques = SurveyQuestion(
+            text=f'Test {i}', type='text', section_id=_sections[0]['id'],
+            status=SurveyStatusEnum.Published.value, is_required=True
+        )
         session.add(ques)
         session.commit()
         _questions.append({
