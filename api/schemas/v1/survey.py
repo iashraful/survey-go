@@ -43,7 +43,7 @@ class SurveyQuestionCreateSchema(BaseModel):
     text_translation: str
     type: str
     status: Optional[str] = SurveyStatusEnum.Draft.value
-    is_required: Optional[bool] = False
+    is_required: Optional[bool]
     options: List[QuestionOptionCreateSchema]
 
     class Config:
@@ -120,3 +120,33 @@ class SurveyQuestionBasicSchema(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+# Update Schemas
+class QuestionOptionUpdateSchema(QuestionOptionCreateSchema):
+    id: int
+    name: str
+    name_translation: str
+
+
+class SurveyQuestionUpdateSchema(SurveyQuestionCreateSchema):
+    id: int
+    text: str
+    text_translation: str
+    type: str
+    status: Optional[str] = SurveyStatusEnum.Draft.value
+    is_required: Optional[bool]
+    options: List[QuestionOptionUpdateSchema]
+
+
+class SurveySectionUpdateSchema(SurveySectionCreateSchema):
+    id: int
+    name: str
+    questions: List[SurveyQuestionUpdateSchema]
+
+
+class SurveyUpdateSchema(SurveyCreateSchema):
+    name: str
+    instructions: str
+    status: Optional[str] = SurveyStatusEnum.Draft.value
+    sections: List[SurveySectionUpdateSchema]

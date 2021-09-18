@@ -115,7 +115,7 @@ export default {
             data: serializableData,
             method: _slug ? 'put' : 'post'
           })
-          if (response.status === 201) {
+          if (response.status === 201 || response.status === 200) {
             this.$buefy.toast.open({
               message: 'Survey saved successful.',
               type: 'is-success'

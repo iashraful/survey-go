@@ -11,7 +11,7 @@ from api.core.auth import get_current_user
 from api.core.database import get_db
 from api.enums.survey_enums import QuestionTypeEnum
 from api.models import QuestionOption, Survey, SurveyQuestion, User
-from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema
+from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, SurveyUpdateSchema
 
 router = APIRouter()
 
@@ -76,5 +76,48 @@ def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
                 ))
     db.bulk_save_objects(_ques_option_list)
     db.commit()
+    db.refresh(_survey)
+    return _survey
+
+
+@router.put('/surveys/{survey_slug}/', response_model=SurveyDetailsSchema, status_code=200)
+def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = Depends(get_db),
+                  current_user: User = Depends(get_current_user)):
+    _survey = Survey.objects(db).filter_by(slug=survey_slug).first()
+    if not _survey:
+        raise HTTPException(status_code=404, detail='No survey found.')
+    _survey.user_id = current_user.id
+    _survey.name = survey.name
+    _survey.instructions = survey.instructions
+    db.commit()
+    _ques_option_list = []
+    for section in survey.sections:
+        _sec = SurveySection.objects(db).get(ident=section.id)
+        _sec.name = section.name
+        _sec.survey_id = _survey.id
+        db.commit()
+
+        for question in section.questions:
+            if question.type not in QuestionTypeEnum.list_of_values():
+                raise HTTPException(
+                    status_code=400,
+                    detail='Question Type doesn\'t found.'
+                )
+            _ques = SurveyQuestion.objects(db).get(ident=question.id)
+
+            _ques.text = question.text
+            _ques.text_translation = question.text_translation,
+            _ques.type = question.type
+            _ques.survey_id = _survey.id
+            _ques.section_id = _sec.id
+            _ques.status = question.status
+            _ques.is_required = question.is_required
+            db.commit()
+            for opt in question.options:
+                _opt = QuestionOption.objects(db).get(ident=opt.id)
+                _opt.name = opt.name
+                _opt.name_translation = opt.name_translation
+                _opt.question_id = _ques.id
+                db.commit()
     db.refresh(_survey)
     return _survey
