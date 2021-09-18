@@ -73,6 +73,7 @@ export default {
               {
                 text: '',
                 text_translation: '',
+                is_required: true,
                 type: 'text',
                 __id: uuidv4(),
                 options: [
@@ -135,7 +136,23 @@ export default {
     },
     addMoreSection () {
       this.formData.sections.push(
-        { name: '', __id: uuidv4() }
+        {
+          name: '',
+          __id: uuidv4(),
+          questions: [
+            {
+              text: '',
+              text_translation: '',
+              is_required: true,
+              type: 'text',
+              __id: uuidv4(),
+              options: [
+                { name: '' },
+                { name: '' }
+              ]
+            }
+          ]
+        }
       )
     },
     handleSectionRemove (identity) {

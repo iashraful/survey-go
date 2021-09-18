@@ -110,7 +110,7 @@ export default {
     },
     addMoreQuestion () {
       this.section.questions.push({
-        text: '', text_translation: '', type: 'text', __id: uuidv4()
+        text: '', text_translation: '', type: 'text', __id: uuidv4(), is_required: true
       })
     },
     updateQuestionByIdentity ({ identity, data }) {

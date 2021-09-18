@@ -113,6 +113,7 @@ def test_data(client, session):
         session.commit()
         _surveys.append({
             'id': survey.id,
+            'slug': survey.slug,
             'name': survey.name
         })
     # Create Sections

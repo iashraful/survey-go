@@ -1,6 +1,7 @@
+from api.models.survey import Survey
 from api.enums.survey_enums import QuestionTypeEnum
 
-from .setup import auth_token, client, session
+from .setup import auth_token, client, session, test_data
 
 
 def test_create_survey(client, auth_token):
@@ -15,6 +16,7 @@ def test_create_survey(client, auth_token):
                         "text": "What's you name?",
                         "text_translation": "What's you name?",
                         "type": QuestionTypeEnum.Text.value,
+                        "is_required": True,
                         "options": [
 
                         ]
@@ -23,6 +25,7 @@ def test_create_survey(client, auth_token):
                         "text": "What's your favorite from following?",
                         "text_translation": "",
                         "type": QuestionTypeEnum.SingleSelect.value,
+                        "is_required": True,
                         "options": [
                             {
                                 "name": "Apple",
@@ -41,7 +44,7 @@ def test_create_survey(client, auth_token):
                 ]
             }
         ],
-        
+
     }
     response = client.post('/api/v1/surveys/', json=json_data,
                            headers={'Authorization': f'Bearer {auth_token}'})
@@ -54,6 +57,9 @@ def test_get_survey_list(client, auth_token):
     assert response.status_code == 200
 
 
-# def test_get_survey_details(client, auth_token):
-#     response = client.get(f'/api/v1/surveys/{}/', headers={'Authorization': f'Bearer {auth_token}'})
-#     assert response.status_code == 200
+def test_get_survey_details(client, auth_token, test_data):
+    _survey_slug = test_data[Survey.__name__][0]['slug']
+    response = client.get(
+        f'/api/v1/surveys/{_survey_slug}/',
+        headers={'Authorization': f'Bearer {auth_token}'})
+    assert response.status_code == 200
