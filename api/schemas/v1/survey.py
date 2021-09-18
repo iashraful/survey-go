@@ -10,6 +10,7 @@ class SurveySchema(BaseModel):
     id: int
     user_id: int
     name: str
+    slug: str
     instructions: str
     status: Optional[str] = SurveyStatusEnum.Draft.value
 
@@ -81,6 +82,7 @@ class SurveyQuestionDetailsSchema(BaseModel):
     id: int
     text: str
     text_translation: str
+    type: str
     status: Optional[str]
     is_required: Optional[bool]
     options: List[QuestionOptionDetailsSchema]
@@ -90,6 +92,7 @@ class SurveyQuestionDetailsSchema(BaseModel):
 
 
 class SurveySectionDetailsSchema(BaseModel):
+    id: int
     name: str
     questions: List[SurveyQuestionDetailsSchema]
 

@@ -19,6 +19,7 @@
               :index="_i"
               :identity="sec.__id"
               :section-count="formData.sections.length"
+              :existing-section="sec"
               @onSectionRemove="handleSectionRemove"
               @onSectionUpdate="handleSectionUpdate"
             />
@@ -45,7 +46,7 @@
 
 <script>
 import { v4 as uuidv4 } from 'uuid'
-import { _post } from '@/utils/api-request'
+import { createOrUpdate } from '@/utils/api-request'
 import SurveySectionForm from './SurveySectionForm.vue'
 import SurveyMixin from '../../mixins/SurveyMixin'
 
@@ -53,6 +54,13 @@ export default {
   name: 'SurveyForm',
   components: { SurveySectionForm },
   mixins: [SurveyMixin],
+  props: {
+    existingSurvey: {
+      type: Object,
+      required: false,
+      default: () => {}
+    }
+  },
   data () {
     return {
       formData: {
@@ -61,6 +69,11 @@ export default {
           { name: '', __id: uuidv4() }
         ]
       }
+    }
+  },
+  watch: {
+    existingSurvey (newValue) {
+      this.formData = this.parseApiSurveyToEditor(newValue)
     }
   },
   methods: {
@@ -80,7 +93,13 @@ export default {
         console.log('Survey Form')
         console.log(serializableData)
         try {
-          const response = await _post({ path: '/v1/surveys/', data: serializableData })
+          const _slug = this.$route.params.slug
+          const apiPath = _slug ? `/v1/surveys/${_slug}` : '/v1/surveys/'
+          const response = await createOrUpdate({
+            path: apiPath,
+            data: serializableData,
+            method: _slug ? 'put' : 'post'
+          })
           if (response.status === 201) {
             this.$buefy.toast.open({
               message: 'Survey saved successful.',

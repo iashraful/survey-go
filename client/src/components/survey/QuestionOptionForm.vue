@@ -31,11 +31,16 @@ export default {
     identity: {
       type: String,
       required: true
+    },
+    existingOption: {
+      type: Object,
+      required: false,
+      default: () => {}
     }
   },
   data () {
     return {
-      option: { name: '', __id: this.identity }
+      option: this.existingOption || { name: '', __id: this.identity }
     }
   },
   methods: {

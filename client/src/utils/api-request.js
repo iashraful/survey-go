@@ -23,3 +23,16 @@ export const _post = async function ({ path, data, noToken = false }) {
   const url = makeApiUrl(path)
   return await Axios.post(url, data, { headers: _headers })
 }
+
+export const createOrUpdate = async function ({ path, data, noToken = false, method = 'post' }) {
+  const _headers = {}
+  if (!noToken) {
+    _headers.Authorization = `Bearer ${store.getters.getAccessToken}`
+  }
+  const url = makeApiUrl(path)
+  console.log(method)
+  if (method === 'put') {
+    return await Axios.put(url, data, { headers: _headers })
+  }
+  return await Axios.post(url, data, { headers: _headers })
+}

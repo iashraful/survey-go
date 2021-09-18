@@ -40,6 +40,7 @@
         v-for="(opt, _i) in question.options" :key="opt.__id"
         :index="_i" :identity="opt.__id"
         :option-count="question.options.length"
+        :existing-option="opt"
         @onOptionRemove="handleOptionRemove"
         @onOptionUpdate="handleOptionUpdate"
       />
@@ -81,12 +82,17 @@ export default {
     questionCount: {
       type: Number,
       required: true
+    },
+    existingQuestion: {
+      type: Object,
+      required: false,
+      default: () => {}
     }
   },
   components: { QuestionOptionForm },
   data () {
     return {
-      question: {
+      question: this.existingQuestion || {
         text: '',
         text_translation: '',
         type: 'text',

@@ -29,8 +29,37 @@ export default {
           })
         }
       })
-      console.log(finalData)
       return finalData
+    },
+    parseApiSurveyToEditor (apiData) {
+      const parsedData = {}
+      parsedData.name = apiData.name
+      parsedData.name_translation = apiData.name_translation
+      parsedData.instructions = apiData.instructions
+      parsedData.__id = apiData.slug
+      parsedData.sections = apiData.sections.map((sec) => {
+        return {
+          __id: JSON.stringify(sec.id) || sec.name,
+          name: sec.name,
+          questions: sec.questions.map((ques) => {
+            return {
+              __id: JSON.stringify(ques.id),
+              is_required: ques.is_required,
+              text: ques.text,
+              type: ques.type,
+              text_translation: ques.text_translation,
+              options: ques.options.map((opt) => {
+                return {
+                  __id: JSON.stringify(opt.id),
+                  name: opt.name,
+                  name_translation: opt.name_translation
+                }
+              })
+            }
+          })
+        }
+      })
+      return parsedData
     }
   }
 }

@@ -34,6 +34,7 @@
               v-for="(ques, _i) in section.questions" :key="ques.__id"
               :index="_i" :identity="ques.__id"
               :question-count="section.questions.length"
+              :existing-question="ques"
               @onQuestionRemove="removeQuestionByIdentity"
               @onQuestionUpdate="updateQuestionByIdentity"
             />
@@ -70,12 +71,17 @@ export default {
     sectionCount: {
       type: Number,
       required: true
+    },
+    existingSection: {
+      type: Object,
+      required: false,
+      default: () => {}
     }
   },
   data () {
     return {
       isOpen: 0,
-      section: {
+      section: this.existingSection || {
         name: '',
         questions: [
           {

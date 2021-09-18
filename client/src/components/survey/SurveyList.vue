@@ -13,7 +13,7 @@
       <b-table-column label="Status" v-slot="props">
         {{ props.row.status | default }}
       </b-table-column>
-      <b-table-column label="Actions">
+      <b-table-column label="Actions" v-slot="props">
         <b-tooltip label="Publish the survey to collect data" position="is-top">
           <b-button
             style="margin-right: 2px"
@@ -22,6 +22,8 @@
         </b-tooltip>
         <b-tooltip label="Edit the survey before you publish it" position="is-top">
           <b-button
+            tag="router-link"
+            :to="`${$route.path}/edit/${props.row.slug}`"
             style="margin-right: 2px"
             type="is-info" size="is-small" outlined
             icon-pack="fas" icon-left="edit"></b-button>

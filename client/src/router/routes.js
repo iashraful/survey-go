@@ -28,6 +28,16 @@ export default [
     }
   },
   {
+    path: '/surveys/edit/:slug',
+    name: 'SurveyEditView',
+    component: () => import(/* webpackChunkName: "survey-edit" */ '../views/survey/SurveyEditView.vue'),
+    meta: {
+      middleware: [
+        middlewares.isAuthenticated
+      ]
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
