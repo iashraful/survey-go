@@ -66,7 +66,22 @@ export default {
       formData: {
         name: '',
         sections: [
-          { name: '', __id: uuidv4() }
+          {
+            __id: uuidv4(),
+            name: '',
+            questions: [
+              {
+                text: '',
+                text_translation: '',
+                type: 'text',
+                __id: uuidv4(),
+                options: [
+                  { name: '' },
+                  { name: '' }
+                ]
+              }
+            ]
+          }
         ]
       }
     }
