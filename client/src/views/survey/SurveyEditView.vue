@@ -27,7 +27,6 @@ export default {
     async getSurveyDetailsFromAPI () {
       try {
         const response = await _get({ path: `/v1/surveys/${this.$route.params.slug}` })
-        console.log(response)
         if (response.status === 200) {
           this.surveyDetails = response.data
         }

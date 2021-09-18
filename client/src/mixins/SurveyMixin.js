@@ -33,7 +33,6 @@ export default {
           })
         }
       })
-      console.log(finalData)
       return finalData
     },
     parseApiSurveyToEditor (apiData) {

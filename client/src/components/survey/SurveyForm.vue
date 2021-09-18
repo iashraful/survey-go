@@ -105,8 +105,6 @@ export default {
       const validation = this.checkValidation()
       if (validation.status) {
         const serializableData = this.parseFinalSurveyForAPI(this.formData)
-        console.log('Survey Form')
-        console.log(serializableData)
         try {
           const _slug = this.$route.params.slug
           const apiPath = _slug ? `/v1/surveys/${_slug}` : '/v1/surveys/'
