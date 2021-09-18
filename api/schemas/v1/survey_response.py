@@ -36,6 +36,7 @@ class QuestionResponseDetailsSchema(BaseModel):
 class SurveyResponseDetailsSchema(BaseModel):
     id: int
     survey_id: int
+    slug: str
     user: UserBasicSchema
     created_time: datetime
     question_responses: List[QuestionResponseDetailsSchema]

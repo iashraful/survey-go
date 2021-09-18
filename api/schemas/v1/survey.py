@@ -102,6 +102,7 @@ class SurveyDetailsSchema(BaseModel):
     user_id: int
     user: UserBasicSchema
     name: str
+    slug: str
     instructions: str
     status: Optional[str]
     sections: List[SurveySectionDetailsSchema]

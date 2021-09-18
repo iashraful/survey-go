@@ -9,13 +9,14 @@ from api.enums.survey_enums import SurveyStatusEnum
 class Survey(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User")
     name = Column(String)
+    slug = Column(String, unique=True)
     instructions = Column(String, nullable=True)
     status = Column(String)
     published_time = Column(DateTime, nullable=True)
 
     # Define relationship
+    user = relationship("User")
     questions = relationship(
         "SurveyQuestion", back_populates="survey",
     )

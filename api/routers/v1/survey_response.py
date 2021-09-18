@@ -1,4 +1,5 @@
 from datetime import date, datetime
+import uuid
 from api.models.survey_response import QuestionResponse, SurveyResponse
 from fastapi import APIRouter
 from fastapi.params import Depends
@@ -18,7 +19,7 @@ def create_survey_response(response: SurveyResponseCreateSchema, db: session = D
                            current_user: User = Depends(get_current_user)):
     instance = SurveyResponse(
         survey_id=response.survey_id, created_time=datetime.now(),
-        user_id=current_user.id
+        user_id=current_user.id, slug=uuid.uuid4().hex
     )
     db.add(instance)
     db.commit()

@@ -6,8 +6,11 @@ from sqlalchemy.orm import relationship
 class SurveyResponse(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates='responses')
+    slug = Column(String, unique=True)
     survey_id = Column(Integer, ForeignKey('surveys.id'))
+
+    # Relationship
+    user = relationship("User", back_populates='responses')
     survey = relationship("Survey", back_populates='responses')
     question_responses = relationship(
         "QuestionResponse", back_populates='survey_response')
@@ -21,12 +24,14 @@ class SurveyResponse(ModelBase):
 class QuestionResponse(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     question_id = Column(Integer, ForeignKey('questions.id'))
-    question = relationship("SurveyQuestion")
     survey_response_id = Column(Integer, ForeignKey('survey_responses.id'))
-    survey_response = relationship(
-        "SurveyResponse", back_populates='question_responses')
     answer_text = Column(String(512))
     created_time = Column(DateTime)
+
+    # Relationship
+    survey_response = relationship(
+        "SurveyResponse", back_populates='question_responses')
+    question = relationship("SurveyQuestion")
 
     @classmethod
     def get_table_name(cls, make_plural=True):

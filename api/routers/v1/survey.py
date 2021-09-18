@@ -1,3 +1,4 @@
+import uuid
 from api.models.survey import SurveySection
 from typing import List
 
@@ -45,7 +46,7 @@ def create_survey(survey: SurveyCreateSchema, db: Session = Depends(get_db),
                   current_user: User = Depends(get_current_user)):
     _survey = Survey(
         user_id=current_user.id, name=survey.name, instructions=survey.instructions,
-        status=survey.status
+        status=survey.status, slug=uuid.uuid4().hex
     )
     db.add(_survey)
     db.commit()
