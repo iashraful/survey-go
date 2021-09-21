@@ -90,11 +90,20 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
     _survey.name = survey.name
     _survey.instructions = survey.instructions
     db.commit()
-    _ques_option_list = []
+    existing_sections_ids = [sec.id for sec in SurveySection.objects(
+        db).filter_by(survey_id=_survey.id)]
+    new_section_ids = []
     for section in survey.sections:
-        _sec = SurveySection.objects(db).get(ident=section.id)
-        _sec.name = section.name
-        _sec.survey_id = _survey.id
+        if section.id:
+            _sec = SurveySection.objects(db).get(ident=section.id)
+            _sec.name = section.name
+            _sec.survey_id = _survey.id
+        else:
+            _sec = SurveySection(name=section.name, survey_id=_survey.id)
+            db.add(_sec)
+        new_section_ids.append(_sec.id)
+        will_be_deleted_sections = list(
+            set(existing_sections_ids) - set(new_section_ids))
         db.commit()
 
         for question in section.questions:
@@ -119,5 +128,11 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
                 _opt.name_translation = opt.name_translation
                 _opt.question_id = _ques.id
                 db.commit()
+    # Deleted Related Objects First
+    SurveyQuestion.objects(db).filter(SurveySection.id.in_(
+        will_be_deleted_sections)).delete(synchronize_session=False)
+    # Delete the sections
+    SurveySection.objects(db).filter(
+        SurveySection.id.in_(will_be_deleted_sections)).delete(synchronize_session=False)
     db.refresh(_survey)
     return _survey
