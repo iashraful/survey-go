@@ -124,13 +124,13 @@ class SurveyQuestionBasicSchema(BaseModel):
 
 # Update Schemas
 class QuestionOptionUpdateSchema(QuestionOptionCreateSchema):
-    id: int
+    id: Optional[int]
     name: str
     name_translation: str
 
 
 class SurveyQuestionUpdateSchema(SurveyQuestionCreateSchema):
-    id: int
+    id: Optional[int]
     text: str
     text_translation: str
     type: str
@@ -140,12 +140,13 @@ class SurveyQuestionUpdateSchema(SurveyQuestionCreateSchema):
 
 
 class SurveySectionUpdateSchema(SurveySectionCreateSchema):
-    id: int
+    id: Optional[int]
     name: str
     questions: List[SurveyQuestionUpdateSchema]
 
 
 class SurveyUpdateSchema(SurveyCreateSchema):
+    id: Optional[int]
     name: str
     instructions: str
     status: Optional[str] = SurveyStatusEnum.Draft.value

@@ -2,6 +2,8 @@ import uuid
 from api.models.survey import SurveySection
 from typing import List
 
+from sqlalchemy import or_
+
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
@@ -11,7 +13,8 @@ from api.core.auth import get_current_user
 from api.core.database import get_db
 from api.enums.survey_enums import QuestionTypeEnum
 from api.models import QuestionOption, Survey, SurveyQuestion, User
-from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, SurveyUpdateSchema
+from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
+    SurveyUpdateSchema
 
 router = APIRouter()
 
@@ -89,10 +92,18 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
     _survey.user_id = current_user.id
     _survey.name = survey.name
     _survey.instructions = survey.instructions
-    db.commit()
-    existing_sections_ids = [sec.id for sec in SurveySection.objects(
+    old_sections_ids = [sec.id for sec in SurveySection.objects(
         db).filter_by(survey_id=_survey.id)]
+    old_question_ids = [ques.id for ques in SurveyQuestion.objects(
+        db).filter_by(survey_id=_survey.id)]
+    old_option_ids = [opt.id for opt in QuestionOption.objects(db).join(
+        QuestionOption.question, aliased=True).filter_by(survey_id=_survey.id)]
     new_section_ids = []
+    new_question_ids = []
+    new_option_ids = []
+    will_be_deleted_sections = []
+    will_be_deleted_questions = []
+    will_be_deleted_options = []
     for section in survey.sections:
         if section.id:
             _sec = SurveySection.objects(db).get(ident=section.id)
@@ -101,10 +112,8 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
         else:
             _sec = SurveySection(name=section.name, survey_id=_survey.id)
             db.add(_sec)
-        new_section_ids.append(_sec.id)
-        will_be_deleted_sections = list(
-            set(existing_sections_ids) - set(new_section_ids))
         db.commit()
+        new_section_ids.append(_sec.id)
 
         for question in section.questions:
             if question.type not in QuestionTypeEnum.list_of_values():
@@ -112,27 +121,53 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
                     status_code=400,
                     detail='Question Type doesn\'t found.'
                 )
-            _ques = SurveyQuestion.objects(db).get(ident=question.id)
-
-            _ques.text = question.text
-            _ques.text_translation = question.text_translation,
-            _ques.type = question.type
-            _ques.survey_id = _survey.id
-            _ques.section_id = _sec.id
-            _ques.status = question.status
-            _ques.is_required = question.is_required
+            if question.id:
+                _ques = SurveyQuestion.objects(db).get(ident=question.id)
+                _ques.text = question.text
+                _ques.text_translation = question.text_translation,
+                _ques.type = question.type
+                _ques.survey_id = _survey.id
+                _ques.section_id = _sec.id
+                _ques.status = question.status
+                _ques.is_required = question.is_required
+            else:
+                _ques = SurveyQuestion(
+                    text=question.text, text_translation=question.text_translation,
+                    type=question.type, survey_id=_survey.id, section_id=_sec.id,
+                    status=question.status, is_required=question.is_required
+                )
+                db.add(_ques)
             db.commit()
+            new_question_ids.append(_ques.id)
             for opt in question.options:
-                _opt = QuestionOption.objects(db).get(ident=opt.id)
-                _opt.name = opt.name
-                _opt.name_translation = opt.name_translation
-                _opt.question_id = _ques.id
+                if opt.id:
+                    _opt = QuestionOption.objects(db).get(ident=opt.id)
+                    _opt.name = opt.name
+                    _opt.name_translation = opt.name_translation
+                    _opt.question_id = _ques.id
+                else:
+                    _opt = QuestionOption(
+                        name=opt.name, name_translation=opt.name_translation,
+                        question_id=_ques.id
+                    )
+                    db.add(_opt)
                 db.commit()
+                new_option_ids.append(_opt.id)
     # Deleted Related Objects First
-    SurveyQuestion.objects(db).filter(SurveySection.id.in_(
-        will_be_deleted_sections)).delete(synchronize_session=False)
-    # Delete the sections
+    will_be_deleted_sections += list(set(old_sections_ids) - set(new_section_ids))
+    will_be_deleted_questions += list(set(old_question_ids) - set(new_question_ids))
+    will_be_deleted_options += list(set(old_option_ids) - set(new_option_ids))
+    # Delete Options
+    QuestionOption.objects(db).filter(
+        QuestionOption.id.in_(will_be_deleted_options)
+    ).delete(synchronize_session=False)
+    # Delete Questions
+    SurveyQuestion.objects(db).filter(
+        SurveyQuestion.id.in_(will_be_deleted_questions)
+    ).delete(synchronize_session=False)
+    # Delete Sections
     SurveySection.objects(db).filter(
         SurveySection.id.in_(will_be_deleted_sections)).delete(synchronize_session=False)
+    db.commit()
     db.refresh(_survey)
     return _survey
