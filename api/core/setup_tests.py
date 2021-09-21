@@ -11,7 +11,7 @@ from api.core.model_base import ModelBase
 from api.survey.enums.survey_enums import SurveyStatusEnum
 from api.main import app
 from api.survey.models import Survey, SurveyQuestion, SurveySection
-from api.survey.models import User
+from api.auth.models.user import User
 
 SQLALCHEMY_DATABASE_URL = os.environ.get('TESTING_DB_CONN_STRING')
 

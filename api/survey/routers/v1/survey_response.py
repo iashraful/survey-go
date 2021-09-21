@@ -6,7 +6,7 @@ from fastapi.params import Depends
 from sqlalchemy.orm import session
 
 from api.core.auth import get_current_user
-from api.survey.models.user import User
+from api.auth.models.user import User
 from api.core.database import get_db
 from api.survey.schemas.v1.survey_response import SurveyResponseCreateSchema, SurveyResponseDetailsSchema
 

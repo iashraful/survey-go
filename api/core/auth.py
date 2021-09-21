@@ -10,7 +10,7 @@ from jose import jwt, JWTError
 from api.core.config import settings
 from api.core.database import get_db
 from api.core.security import verify_password
-from api.survey.models import User
+from api.auth.models import User
 
 JWTPayloadMapping = MutableMapping[
     str, Union[datetime, bool, str, List[str], List[int]]

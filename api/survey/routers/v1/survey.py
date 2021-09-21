@@ -9,7 +9,8 @@ from sqlalchemy.orm import Session
 from api.core.auth import get_current_user
 from api.core.database import get_db
 from api.survey.enums.survey_enums import QuestionTypeEnum
-from api.survey.models import QuestionOption, Survey, SurveyQuestion, User
+from api.survey.models import QuestionOption, Survey, SurveyQuestion
+from api.auth.models import User
 from api.survey.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
     SurveyUpdateSchema
 
