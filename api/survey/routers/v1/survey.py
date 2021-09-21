@@ -1,19 +1,17 @@
 import uuid
-from api.models.survey import SurveySection
+from api.survey.models.survey import SurveySection
 from typing import List
-
-from sqlalchemy import or_
 
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
-from starlette.requests import Request
 
 from api.core.auth import get_current_user
 from api.core.database import get_db
-from api.enums.survey_enums import QuestionTypeEnum
-from api.models import QuestionOption, Survey, SurveyQuestion, User
-from api.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
+from api.survey.enums.survey_enums import QuestionTypeEnum
+from api.survey.models import QuestionOption, Survey, SurveyQuestion
+from api.auth.models import User
+from api.survey.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
     SurveyUpdateSchema
 
 router = APIRouter()

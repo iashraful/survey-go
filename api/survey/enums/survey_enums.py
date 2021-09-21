@@ -1,6 +1,4 @@
-from enum import Enum
-
-from api.enums.base import BaseEnum
+from api.survey.enums.base import BaseEnum
 
 
 class SurveyStatusEnum(BaseEnum):

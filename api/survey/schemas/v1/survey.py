@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from api.enums.survey_enums import SurveyStatusEnum
-from api.schemas.v1.user import UserBasicSchema
+from api.survey.enums.survey_enums import SurveyStatusEnum
+from api.auth.schemas.v1.user import UserBasicSchema
 
 
 class SurveySchema(BaseModel):

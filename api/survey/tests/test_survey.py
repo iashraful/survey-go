@@ -1,8 +1,7 @@
-from api.models.survey import Survey
-from api.enums.survey_enums import QuestionTypeEnum
-
-from .setup import auth_token, client, session, test_data
-
+from api.survey.models import Survey
+from api.survey.enums.survey_enums import QuestionTypeEnum
+# WE MUST IMPORT ALL THE FIXTURES WE HAVE DEFINED DURING SETUP PHASE
+from api.core.setup_tests import client, session, auth_token, test_data
 
 def test_create_survey(client, auth_token):
     json_data = {

@@ -1,5 +1,5 @@
 # WE MUST IMPORT ALL THE FIXTURES WE HAVE DEFINED DURING SETUP PHASE
-from .setup import client, session, auth_token
+from api.core.setup_tests import client, session, auth_token, test_data
 
 
 def test_health(client):
