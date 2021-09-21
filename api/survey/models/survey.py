@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Boolean
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import null
 
 from api.core.model_base import ModelBase
-from api.enums.survey_enums import SurveyStatusEnum
 
 
 class Survey(ModelBase):

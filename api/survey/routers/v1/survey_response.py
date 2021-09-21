@@ -1,14 +1,14 @@
-from datetime import date, datetime
+from datetime import datetime
 import uuid
-from api.models.survey_response import QuestionResponse, SurveyResponse
+from api.survey.models.survey_response import QuestionResponse, SurveyResponse
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import session
 
 from api.core.auth import get_current_user
-from api.models.user import User
+from api.survey.models.user import User
 from api.core.database import get_db
-from api.schemas.v1.survey_response import SurveyResponseCreateSchema, SurveyResponseDetailsSchema
+from api.survey.schemas.v1.survey_response import SurveyResponseCreateSchema, SurveyResponseDetailsSchema
 
 router = APIRouter()
 

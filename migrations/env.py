@@ -8,8 +8,7 @@ from alembic import context
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 from api.core.database import SQLALCHEMY_DATABASE_URL
-from api.core.model_base import ModelBase
-from api.models import *
+from api.survey.models import *
 
 config = context.config
 

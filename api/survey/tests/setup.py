@@ -5,14 +5,13 @@ import sqlalchemy
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql.functions import random
 
 from api.core.database import get_db
 from api.core.model_base import ModelBase
-from api.enums.survey_enums import SurveyStatusEnum
+from api.survey.enums.survey_enums import SurveyStatusEnum
 from api.main import app
-from api.models.survey import Survey, SurveyQuestion, SurveySection
-from api.models.user import User
+from api.survey.models import Survey, SurveyQuestion, SurveySection
+from api.survey.models import User
 
 SQLALCHEMY_DATABASE_URL = os.environ.get('TESTING_DB_CONN_STRING')
 

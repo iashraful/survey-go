@@ -3,8 +3,8 @@ from typing import List
 
 from pydantic import BaseModel
 
-from api.schemas.v1.survey import SurveyQuestionBasicSchema, SurveyQuestionDetailsSchema
-from api.schemas.v1.user import UserBasicSchema
+from api.survey.schemas.v1.survey import SurveyQuestionBasicSchema
+from api.survey.schemas.v1.user import UserBasicSchema
 
 
 class QuestionResponseCreateSchema(BaseModel):

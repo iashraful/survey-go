@@ -1,16 +1,15 @@
 from typing import List
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
-from starlette.requests import Request
 
 from api.core.auth import authenticate, create_access_token, get_current_user
 from api.core.database import get_db
 from api.core.security import get_password_hash
-from api.models.user import User
-from api.schemas.v1.user import UserCreateSchema, UserListSchema
+from api.survey.models.user import User
+from api.survey.schemas.v1.user import UserCreateSchema, UserListSchema
 
 router = APIRouter()
 

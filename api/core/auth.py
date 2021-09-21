@@ -1,4 +1,3 @@
-import binascii
 from datetime import datetime, timedelta
 from typing import MutableMapping, Union, List, Optional, Any
 
@@ -7,12 +6,11 @@ from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 from sqlalchemy.orm.session import Session
 from jose import jwt, JWTError
-from starlette.authentication import AuthenticationBackend, AuthenticationError
 
 from api.core.config import settings
-from api.core.database import get_db, LocalSession
+from api.core.database import get_db
 from api.core.security import verify_password
-from api.models import User
+from api.survey.models import User
 
 JWTPayloadMapping = MutableMapping[
     str, Union[datetime, bool, str, List[str], List[int]]

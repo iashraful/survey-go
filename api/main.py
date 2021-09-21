@@ -1,9 +1,8 @@
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.authentication import AuthenticationMiddleware
 
-from api import routers
+from api.survey import routers
 from api.core.config import settings
 
 app = FastAPI()

@@ -1,4 +1,4 @@
-from api.enums.base import BaseEnum
+from api.survey.enums.base import BaseEnum
 
 class UserStatusEnum(BaseEnum):
     Active = 'Active'

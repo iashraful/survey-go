@@ -1,8 +1,6 @@
-import json
-
-from api.models.survey import Survey, SurveyQuestion
-
-from .setup import auth_token, client, session, test_data
+from api.survey.models import Survey, SurveyQuestion
+# WE MUST IMPORT ALL THE FIXTURES WE HAVE DEFINED DURING SETUP PHASE
+from .setup import client, session, auth_token, test_data
 
 
 def test_create_survey_response(client, auth_token, test_data):
