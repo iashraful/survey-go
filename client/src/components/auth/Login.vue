@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { _post } from '@/utils/api-request'
+import { createOrUpdate } from '@/utils/api-request'
 
 export default {
   name: 'Login',
@@ -62,7 +62,7 @@ export default {
     async login () {
       const onSuccessRedirect = this.$route.query.onSuccess
       try {
-        const response = await _post({ path: '/v2/login/', data: this.formData })
+        const response = await createOrUpdate({ path: '/v2/login/', data: this.formData })
         if (response.status === 200) {
           this.$store.dispatch('updateAccessToken', response.data.access_token)
           if (onSuccessRedirect) {
