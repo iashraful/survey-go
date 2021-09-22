@@ -114,7 +114,14 @@ export default {
   },
   methods: {
     handleQuestionRemove () {
-      this.$emit('onQuestionRemove', this.identity)
+      this.$buefy.dialog.confirm({
+        title: 'Delete Question!!',
+        message: 'Are you sure you want to <b>delete</b> this question? This action cannot be undone.',
+        confirmText: 'Delete',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => this.$emit('onQuestionRemove', this.identity)
+      })
     },
     handleOptionRemove (identity) {
       const _index = this.question.options.findIndex(i => i.__id === identity)
@@ -144,6 +151,9 @@ export default {
     question: {
       handler (newValue) {
         this.$emit('onQuestionUpdate', { identity: this.identity, data: newValue })
+        if (this.showOptionForm() && this.question.options.length === 0) {
+          this.question.options.push({ name: '', __id: uuidv4() })
+        }
       },
       deep: true
     }
