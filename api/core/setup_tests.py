@@ -1,4 +1,5 @@
 import os
+import uuid
 
 import pytest
 import sqlalchemy
@@ -106,7 +107,8 @@ def test_data(client, session):
     for i in range(1, 4):
         survey = Survey(
             name=f'Test {i}', instructions=f'Instruction {i}',
-            status=SurveyStatusEnum.Published.value
+            status=SurveyStatusEnum.Published.value, slug=uuid.uuid4().hex,
+            user_id=_users[0]['id']
         )
         session.add(survey)
         session.commit()
@@ -117,8 +119,8 @@ def test_data(client, session):
         })
     # Create Sections
     _sections = []
-    for i in range(1, 3):
-        sec = SurveySection(name=f'Section {i}', survey_id=_surveys[i]['id'])
+    for i in range(1, 4):
+        sec = SurveySection(name=f'Section {i}', survey_id=_surveys[i-1]['id'])
         session.add(sec)
         session.commit()
         _sections.append({
@@ -127,9 +129,10 @@ def test_data(client, session):
         })
     # Create Questions
     _questions = []
-    for i in range(1, 8):
+    for i in range(1, 4):
         ques = SurveyQuestion(
-            text=f'Test {i}', type='text', section_id=_sections[0]['id'],
+            text=f'Test {i}', text_translation=f'Test {i}', type='text',
+            section_id=_sections[i-1]['id'], survey_id=_surveys[i-1]['id'],
             status=SurveyStatusEnum.Published.value, is_required=True
         )
         session.add(ques)
