@@ -6,7 +6,7 @@ from api.survey import routers as survey_routers
 from api.auth import routers as auth_routers
 from api.core.config import settings
 
-app = FastAPI()
+app = FastAPI(title='Survey Go API Documentation')
 
 # Auth Module APIs
 for _r in auth_routers.v1_routes:

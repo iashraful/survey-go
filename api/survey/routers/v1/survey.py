@@ -8,11 +8,11 @@ from sqlalchemy.orm import Session
 
 from api.core.auth import get_current_user
 from api.core.database import get_db
-from api.survey.enums.survey_enums import QuestionTypeEnum
+from api.survey.enums.survey_enums import QuestionTypeEnum, SurveyStatusEnum
 from api.survey.models import QuestionOption, Survey, SurveyQuestion
 from api.auth.models import User
 from api.survey.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
-    SurveyUpdateSchema
+    SurveyUpdateSchema, SurveyPublishSchema
 
 router = APIRouter()
 
@@ -166,6 +166,22 @@ def update_survey(survey_slug: str, survey: SurveyUpdateSchema, db: Session = De
     # Delete Sections
     SurveySection.objects(db).filter(
         SurveySection.id.in_(will_be_deleted_sections)).delete(synchronize_session=False)
+    db.commit()
+    db.refresh(_survey)
+    return _survey
+
+
+@router.patch('/surveys/{survey_slug}/publish/', response_model=SurveySchema, status_code=200)
+def partial_update_survey(survey_slug: str, survey: SurveyPublishSchema,  db: Session = Depends(get_db),
+                  current_user: User = Depends(get_current_user)):
+    if survey.status != SurveyStatusEnum.Published.value:
+        raise HTTPException(status_code=400, detail='Please publish the survey.')
+    _survey = Survey.objects(db).filter_by(slug=survey_slug).first()
+    if not _survey:
+        raise HTTPException(status_code=404, detail='No survey found.')
+    _survey.status = survey.status
+    SurveyQuestion.objects(db).filter_by(survey_id=_survey.id).update(
+        {SurveyQuestion.status: survey.status}, synchronize_session = False)
     db.commit()
     db.refresh(_survey)
     return _survey
