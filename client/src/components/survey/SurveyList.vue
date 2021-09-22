@@ -14,15 +14,21 @@
         {{ props.row.status | default }}
       </b-table-column>
       <b-table-column label="Actions" v-slot="props">
-        <b-tooltip label="Publish the survey to collect data" position="is-top">
+        <b-tooltip
+          :label="props.row.status === 'Published' ? 'The survey is already published.' : 'Publish the survey to collect data'"
+          position="is-top">
           <b-button
+            :disabled="props.row.status === 'Published'"
             style="margin-right: 2px"
             @click="publishSurvey(props.row.slug)"
             outlined type="is-success" size="is-small"
             icon-pack="fas" icon-left="check"></b-button>
         </b-tooltip>
-        <b-tooltip label="Edit the survey before you publish it" position="is-top">
+        <b-tooltip
+          :label="props.row.status === 'Published' ? 'Published survey can not be editable.' : 'Edit the survey before you publish it'"
+          position="is-top">
           <b-button
+            :disabled="props.row.status === 'Published'"
             tag="router-link"
             :to="`${$route.path}/edit/${props.row.slug}`"
             style="margin-right: 2px"
