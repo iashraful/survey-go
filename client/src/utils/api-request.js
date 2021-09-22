@@ -30,9 +30,10 @@ export const createOrUpdate = async function ({ path, data, noToken = false, met
     _headers.Authorization = `Bearer ${store.getters.getAccessToken}`
   }
   const url = makeApiUrl(path)
-  console.log(method)
   if (method === 'put') {
     return await Axios.put(url, data, { headers: _headers })
+  } else if (method === 'patch') {
+    return await Axios.patch(url, data, { headers: _headers })
   }
   return await Axios.post(url, data, { headers: _headers })
 }

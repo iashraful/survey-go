@@ -17,6 +17,7 @@
         <b-tooltip label="Publish the survey to collect data" position="is-top">
           <b-button
             style="margin-right: 2px"
+            @click="publishSurvey(props.row.slug)"
             outlined type="is-success" size="is-small"
             icon-pack="fas" icon-left="check"></b-button>
         </b-tooltip>
@@ -44,7 +45,7 @@
 </template>
 
 <script>
-import { _get } from '@/utils/api-request'
+import { _get, createOrUpdate } from '@/utils/api-request'
 
 export default {
   name: 'SurveyList',
@@ -68,6 +69,41 @@ export default {
       } catch (e) {
         console.log(e.response)
         this.loading = false
+      }
+    },
+    async publishSurvey (slug) {
+      this.$buefy.dialog.confirm({
+        title: 'Publish Survey!!',
+        message: 'Are you sure you want to <b>Publish</b> this survey?',
+        confirmText: 'Publish',
+        type: 'is-success',
+        iconPack: 'fas',
+        hasIcon: true,
+        onConfirm: async () => {
+          try {
+            const response = await createOrUpdate({
+              path: `/v1/surveys/${slug}/publish/`, method: 'patch', data: { status: 'Published' }
+            })
+            if (response.status === 200) {
+              this.findSurveyAndUpdateStatus('Published', slug)
+              this.$buefy.toast.open({
+                message: 'Survey published successfully.',
+                type: 'is-success'
+              })
+            }
+          } catch (e) {
+            this.$buefy.toast.open({
+              message: 'Error occurred during publish the survey.',
+              type: 'is-danger'
+            })
+          }
+        }
+      })
+    },
+    findSurveyAndUpdateStatus (status, slug) {
+      const _index = this.surveys.findIndex((i) => i.slug === slug)
+      if (_index !== -1) {
+        this.surveys[_index].status = status
       }
     }
   },
