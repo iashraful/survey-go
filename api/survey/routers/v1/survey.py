@@ -185,3 +185,11 @@ def partial_update_survey(survey_slug: str, survey: SurveyPublishSchema,  db: Se
     db.commit()
     db.refresh(_survey)
     return _survey
+
+@router.delete('/surveys/{survey_slug}/', status_code=204)
+def delete_survey(survey_slug: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    survey = Survey.objects(db).filter_by(slug=survey_slug)
+    if not survey.first():
+        raise HTTPException(status_code=404, detail='No survey found.')
+    survey.delete(synchronize_session=False)
+    return survey

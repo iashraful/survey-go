@@ -111,3 +111,11 @@ def test_publish_survey(client, auth_token, test_data):
     _data = response.json()
     assert _data['status'] == SurveyStatusEnum.Published.value
     assert _data['slug'] == _survey_slug
+
+
+def test_delete_survey(client, auth_token, test_data):
+    _survey_slug = test_data[Survey.__name__][0]['slug']
+    response = client.delete(
+        url=f'/api/v1/surveys/{_survey_slug}/', headers={'Authorization': f'Bearer {auth_token}'}
+    )
+    assert response.status_code == 204

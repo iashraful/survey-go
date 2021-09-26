@@ -16,9 +16,9 @@ class Survey(ModelBase):
     # Define relationship
     user = relationship("User")
     questions = relationship(
-        "SurveyQuestion", back_populates="survey",
+        "SurveyQuestion", back_populates="survey", cascade="all, delete"
     )
-    sections = relationship("SurveySection", back_populates='survey')
+    sections = relationship("SurveySection", back_populates='survey', cascade="all, delete")
     responses = relationship("SurveyResponse", back_populates='survey')
 
     @classmethod
@@ -32,7 +32,7 @@ class SurveySection(ModelBase):
     survey_id = Column(Integer, ForeignKey('surveys.id'))
     # Define relationship
     questions = relationship(
-        "SurveyQuestion", back_populates="section",
+        "SurveyQuestion", back_populates="section", cascade="all, delete"
     )
     survey = relationship(
         "Survey", back_populates="sections",
@@ -55,8 +55,7 @@ class SurveyQuestion(ModelBase):
 
     # Relationships
     options = relationship(
-        "QuestionOption", cascade="all",
-        back_populates="question",
+        "QuestionOption", back_populates="question", cascade="all, delete"
     )
     section = relationship(
         "SurveySection", back_populates="questions",
@@ -74,7 +73,7 @@ class QuestionOption(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     question_id = Column(Integer, ForeignKey('questions.id'))
     question = relationship(
-        "SurveyQuestion", cascade="all",
+        "SurveyQuestion", cascade="all, delete",
         back_populates="options",
     )
     name = Column(String)
