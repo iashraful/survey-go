@@ -38,8 +38,15 @@
         <b-tooltip label="DELETE!! Will be lost forever" position="is-top">
           <b-button
             outlined @click="deleteSurvey(props.row.slug)"
+            style="margin-right: 2px"
             type="is-danger" size="is-small"
             icon-pack="fas" icon-left="trash"></b-button>
+        </b-tooltip>
+        <b-tooltip label="Share the survey to collect data." position="is-top">
+          <b-button
+            outlined @click="copySurveyResponseLink(props.row.slug)"
+            type="is-primary" size="is-small"
+            icon-pack="fas" icon-left="share"></b-button>
         </b-tooltip>
       </b-table-column>
 
@@ -144,6 +151,14 @@ export default {
       if (_index !== -1) {
         this.surveys.splice(_index, 1)
       }
+    },
+    async copySurveyResponseLink (slug) {
+      const responseLink = `${window.location.origin}/survey-responses/${slug}/create`
+      await navigator.clipboard.writeText(responseLink)
+      this.$buefy.toast.open({
+        message: 'Link copied to the clipboard.',
+        type: 'is-success'
+      })
     }
   },
   filters: {
