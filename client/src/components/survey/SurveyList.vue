@@ -37,7 +37,7 @@
         </b-tooltip>
         <b-tooltip label="DELETE!! Will be lost forever" position="is-top">
           <b-button
-            outlined
+            outlined @click="deleteSurvey(props.row.slug)"
             type="is-danger" size="is-small"
             icon-pack="fas" icon-left="trash"></b-button>
         </b-tooltip>
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { _get, createOrUpdate } from '@/utils/api-request'
+import { _get, createOrUpdate, _del } from '@/utils/api-request'
 
 export default {
   name: 'SurveyList',
@@ -76,6 +76,33 @@ export default {
         console.log(e.response)
         this.loading = false
       }
+    },
+    deleteSurvey (slug) {
+      this.$buefy.dialog.confirm({
+        title: 'Delete Survey!!',
+        message: 'Are you sure you want to <b>delete</b> this survey? This action cannot be undone.',
+        confirmText: 'Delete',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: async () => {
+          try {
+            const response = await _del({ path: `/v1/surveys/${slug}/` })
+            if (response.status === 204) {
+              this.findSurveyAndRemove(slug)
+              this.$buefy.toast.open({
+                message: 'Survey deleted successfully.',
+                type: 'is-success'
+              })
+            }
+          } catch (e) {
+            this.$buefy.toast.open({
+              message: 'Failed to delete survey.',
+              type: 'is-success'
+            })
+            console.log(e.response)
+          }
+        }
+      })
     },
     async publishSurvey (slug) {
       this.$buefy.dialog.confirm({
@@ -110,6 +137,12 @@ export default {
       const _index = this.surveys.findIndex((i) => i.slug === slug)
       if (_index !== -1) {
         this.surveys[_index].status = status
+      }
+    },
+    findSurveyAndRemove (slug) {
+      const _index = this.surveys.findIndex((i) => i.slug === slug)
+      if (_index !== -1) {
+        this.surveys.splice(_index, 1)
       }
     }
   },

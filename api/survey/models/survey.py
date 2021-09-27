@@ -29,7 +29,7 @@ class Survey(ModelBase):
 class SurveySection(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    survey_id = Column(Integer, ForeignKey('surveys.id'))
+    survey_id = Column(Integer, ForeignKey('surveys.id', ondelete='CASCADE'))
     # Define relationship
     questions = relationship(
         "SurveyQuestion", back_populates="section", cascade="all, delete"
@@ -45,8 +45,8 @@ class SurveySection(ModelBase):
 
 class SurveyQuestion(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
-    survey_id = Column(Integer, ForeignKey('surveys.id'))
-    section_id = Column(Integer, ForeignKey('sections.id'))
+    survey_id = Column(Integer, ForeignKey('surveys.id', ondelete='CASCADE'))
+    section_id = Column(Integer, ForeignKey('sections.id', ondelete='CASCADE'))
     text = Column(String)
     text_translation = Column(String, nullable=True)
     type = Column(String)
@@ -71,7 +71,7 @@ class SurveyQuestion(ModelBase):
 
 class QuestionOption(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
-    question_id = Column(Integer, ForeignKey('questions.id'))
+    question_id = Column(Integer, ForeignKey('questions.id', ondelete='CASCADE'))
     question = relationship(
         "SurveyQuestion", cascade="all, delete",
         back_populates="options",

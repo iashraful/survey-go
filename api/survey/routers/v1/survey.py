@@ -192,4 +192,5 @@ def delete_survey(survey_slug: str, db: Session = Depends(get_db), current_user:
     if not survey.first():
         raise HTTPException(status_code=404, detail='No survey found.')
     survey.delete(synchronize_session=False)
+    db.commit()
     return survey

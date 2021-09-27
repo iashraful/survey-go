@@ -28,3 +28,12 @@ export const createOrUpdate = async function ({ path, data, noToken = false, met
   }
   return await Axios.post(url, data, { headers: _headers })
 }
+
+export const _del = async function ({ path, noToken = false }) {
+  const _headers = {}
+  if (!noToken) {
+    _headers.Authorization = `Bearer ${store.getters.getAccessToken}`
+  }
+  const url = makeApiUrl(path)
+  return await Axios.delete(url, { headers: _headers })
+}
