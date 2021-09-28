@@ -38,6 +38,16 @@ export default [
     }
   },
   {
+    path: '/survey-responses',
+    name: 'SurveyResponseListView',
+    component: () => import(/* webpackChunkName: "survey-response-list" */ '../views/survey-response/SurveyResponseListView.vue'),
+    meta: {
+      middleware: [
+        middlewares.isAuthenticated
+      ]
+    }
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),

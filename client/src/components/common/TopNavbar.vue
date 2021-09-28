@@ -10,7 +10,10 @@
                 Home
             </b-navbar-item>
             <b-navbar-item to="/surveys" tag="router-link">
-                Surveys
+                Survey
+            </b-navbar-item>
+            <b-navbar-item to="/survey-responses" tag="router-link">
+                Survey Response
             </b-navbar-item>
             <b-navbar-item to="/about" tag="router-link">
                 About
