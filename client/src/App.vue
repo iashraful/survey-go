@@ -25,6 +25,9 @@ export default {
   mounted () {
     // Check for route warning
     this.routeWarning = this.$route.query.warning
+    this.$ebus.$on('TRIGGERED_LOGOUT', () => {
+      console.log('Logout due to security purpose.')
+    })
   }
 }
 </script>

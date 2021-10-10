@@ -1,3 +1,5 @@
+import EventBus from '@/utils/event-bus'
+
 const state = {
   auth: localStorage.getItem('accessToken') || false,
   accessToken: localStorage.getItem('accessToken') || undefined
@@ -25,6 +27,7 @@ const actions = {
   },
   triggerLogout ({ commit }) {
     commit('logout')
+    EventBus.$emit('TRIGGERED_LOGOUT')
   }
 }
 
