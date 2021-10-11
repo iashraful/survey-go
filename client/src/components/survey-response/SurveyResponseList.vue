@@ -1,12 +1,17 @@
 <template>
   <div>
-
+    <h1>HEllo</h1>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'SurveyResponseList'
+  name: 'SurveyResponseList',
+  data () {
+    return {
+    }
+  }
 }
 </script>
 

@@ -11,17 +11,17 @@
       </div>
     </div>
     <hr style="margin-top: 0"/>
-    <survey-response-list/>
+    <survey-response-form/>
   </div>
 </template>
 
 <script>
-import SurveyResponseList from '@/components/survey-response/SurveyResponseList'
+import SurveyResponseForm from '@/components/survey-response/SurveyResponseForm'
 
 export default {
-  name: 'SurveyResponseListView',
+  name: 'SurveyResponseFormView',
   components: {
-    SurveyResponseList
+    SurveyResponseForm
   }
 }
 </script>

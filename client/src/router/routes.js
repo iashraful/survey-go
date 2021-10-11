@@ -48,6 +48,11 @@ export default [
     }
   },
   {
+    path: '/survey-responses/:surveySlug',
+    name: 'SurveyResponseFormView',
+    component: () => import(/* webpackChunkName: "survey-response-form" */ '../views/survey-response/SurveyResponseFormView.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
