@@ -1,9 +1,12 @@
 <template>
-    <div class="text-input">
-        <label>{{ field.title }}</label>
-        <input type="text" v-model="value" />
-        <span v-show="displayErrorMgs" v-if="errorText !== ''" class="error">{{ errorText }}</span>
-    </div>
+  <div class="text-input">
+    <b-field
+      :label="field.title"
+      :message="(displayErrorMgs && errorText !== '') ? errorText : ''"
+      :type="(displayErrorMgs && errorText !== '') ? 'is-danger' : ''">
+      <b-input v-model="value" type="text"></b-input>
+    </b-field>
+  </div>
 </template>
 
 <script>
@@ -62,10 +65,11 @@ export default {
 </script>
 
 <style scoped>
-    .text-input input {
-            width: 100%
-        }
-    .text-input .error {
-        color: red;
-    }
+.text-input input {
+  width: 100%
+}
+
+.text-input .error {
+  color: red;
+}
 </style>

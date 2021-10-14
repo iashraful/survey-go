@@ -1,12 +1,30 @@
 <template>
-    <div class="img-input">
-        <label>{{ field.title }}</label>
-        <div class="input-container">
-            <input type="file" ref="file" v-on:change="handleFile"/>
-            <img :src="base64Image"/>
-        </div>
-        <span v-show="displayErrorMgs" v-if="errorText !== ''" class="error">{{ errorText }}</span>
-    </div>
+  <div class="img-input">
+    <label class="label">{{ field.title }}</label>
+    <b-field :class="{'has-name': !!file}" class="file is-primary">
+      <b-upload v-model="file" drag-drop>
+        <section v-if="base64Image !== ''" class="preview-section">
+          <b-image
+            :responsive="true"
+            :src="base64Image"
+            style="max-width: 20em"
+          ></b-image>
+        </section>
+        <section v-if="base64Image === ''" class="section upload-section">
+          <div class="content has-text-centered">
+            <p>
+              <b-icon
+                icon="cloud-upload-alt"
+                pack="fas"
+                size="is-large">
+              </b-icon>
+            </p>
+            <p>Drop your files here or click to upload</p>
+          </div>
+        </section>
+      </b-upload>
+    </b-field>
+  </div>
 </template>
 
 <script>
@@ -18,12 +36,18 @@ export default {
   props: ['outFormat'],
   data () {
     return {
+      file: null,
       base64Image: ''
     }
   },
   methods: {
-    handleFile () {
-      const _file = this.$refs.file.files[0]
+    handleFile ({ file = null }) {
+      let _file
+      if (file === null) {
+        _file = this.$refs.file.files[0]
+      } else {
+        _file = file
+      }
       const formData = new FormData()
       formData.append(this.field.name, _file)
       if (this.outFormat === 'base64') {
@@ -46,23 +70,11 @@ export default {
         reader.onerror = error => reject(error)
       })
     }
+  },
+  watch: {
+    file (newValue) {
+      this.handleFile({ file: newValue })
+    }
   }
 }
 </script>
-
-<style scoped>
-    .img-input .input-container {
-        height: auto;
-        min-height: 100px;
-    }
-    .img-input .input-container input {
-        width: 40%;
-    }
-    .img-input .input-container img {
-        float: right;
-        width: auto;
-        max-height: 100px;
-        max-width: 150px;
-        height: auto;
-    }
-</style>

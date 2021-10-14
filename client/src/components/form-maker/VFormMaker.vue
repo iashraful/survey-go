@@ -1,42 +1,42 @@
 <template>
-    <div class="form-builder">
-        <form @submit.prevent="handleSubmit">
-            <div v-for="(each, _i) in config.props" :key="_i">
-                <h4 v-if="each.group !== undefined" class="group-title">{{ each.group }}</h4>
-                <div class="field-item" v-for="(item, index) in each.fields" :key="index">
-                    <text-input-field
-                        v-if="item.type === fieldTypes.text"
-                        :submitted="submitted"
-                        :field="item" @validate="checkValidation">
-                    </text-input-field>
-                    <number-input-field
-                        v-if="item.type === fieldTypes.number"
-                        :submitted="submitted"
-                        :field="item" @validate="checkValidation">
-                    </number-input-field>
-                    <positive-number-input-field
-                        v-if="item.type === fieldTypes.positiveNumber"
-                        :submitted="submitted"
-                        :field="item" @validate="checkValidation">
-                    </positive-number-input-field>
-                    <email-input-field
-                        v-if="item.type === fieldTypes.email"
-                        :submitted="submitted"
-                        :field="item" @validate="checkValidation">
-                    </email-input-field>
-                    <image-input-field
-                        v-if="item.type === fieldTypes.image"
-                        :submitted="submitted" out-format="base64"
-                        :field="item" @validate="checkValidation">
-                    </image-input-field>
-                </div>
-            </div>
-            <button
-              class="submit-btn"
-              type="submit">{{ submitBtnText | setDefault('Submit') }}
-            </button>
-        </form>
-    </div>
+  <div class="form-builder">
+    <form @submit.prevent="handleSubmit">
+      <div v-for="(each, _i) in config.props" :key="_i">
+        <h4 v-if="each.group !== undefined" class="label group-title">{{ each.group }}</h4>
+        <div v-for="(item, index) in each.fields" :key="index" class="field-item">
+          <text-input-field
+            v-if="item.type === fieldTypes.text"
+            :field="item"
+            :submitted="submitted" @validate="checkValidation">
+          </text-input-field>
+          <number-input-field
+            v-if="item.type === fieldTypes.number"
+            :field="item"
+            :submitted="submitted" @validate="checkValidation">
+          </number-input-field>
+          <positive-number-input-field
+            v-if="item.type === fieldTypes.positiveNumber"
+            :field="item"
+            :submitted="submitted" @validate="checkValidation">
+          </positive-number-input-field>
+          <email-input-field
+            v-if="item.type === fieldTypes.email"
+            :field="item"
+            :submitted="submitted" @validate="checkValidation">
+          </email-input-field>
+          <image-input-field
+            v-if="item.type === fieldTypes.image"
+            :field="item" :submitted="submitted"
+            out-format="base64" @validate="checkValidation">
+          </image-input-field>
+        </div>
+      </div>
+      <button
+        class="submit-btn"
+        type="submit">{{ submitBtnText | setDefault('Submit') }}
+      </button>
+    </form>
+  </div>
 </template>
 
 <script>
@@ -96,19 +96,23 @@ export default {
 </script>
 
 <style scoped>
-    .form-builder {
-        width: 100%;
-    }
-    .form-builder .group-title {
-        margin-bottom: 5px;
-        margin-top: 1.5rem;
-        border-bottom: 1px solid #1f1d1d
-    }
-    .form-builder .field-item {
-        padding-top: 8px
-    }
-    .form-builder .submit-btn {
-        margin-top: 1.5rem;
-        padding: 5px 20px;
-    }
+.form-builder {
+  width: 100%;
+}
+
+.form-builder .group-title {
+  margin-bottom: 5px;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid #1f1d1d
+}
+
+.form-builder .field-item {
+  padding-top: 8px;
+  padding-left: 12px;
+}
+
+.form-builder .submit-btn {
+  margin-top: 1.5rem;
+  padding: 5px 20px;
+}
 </style>
