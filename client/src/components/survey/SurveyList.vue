@@ -42,8 +42,11 @@
             type="is-danger" size="is-small"
             icon-pack="fas" icon-left="trash"></b-button>
         </b-tooltip>
-        <b-tooltip label="Share the survey to collect data." position="is-top">
+        <b-tooltip
+          :label="props.row.status === 'Published' ? 'Share the survey to collect data.' : 'Before you copy the link, publish the survey.'"
+          position="is-top">
           <b-button
+            :disabled="props.row.status !== 'Published'"
             outlined @click="copySurveyResponseLink(props.row.slug)"
             type="is-primary" size="is-small"
             icon-pack="fas" icon-left="share"></b-button>
@@ -58,7 +61,7 @@
 </template>
 
 <script>
-import { _get, createOrUpdate, _del } from '@/utils/api-request'
+import { _del, _get, createOrUpdate } from '@/utils/api-request'
 
 export default {
   name: 'SurveyList',

@@ -14,6 +14,8 @@ from api.auth.models import User
 from api.survey.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
     SurveyUpdateSchema, SurveyPublishSchema
 
+from starlette import status
+
 router = APIRouter()
 
 
@@ -26,7 +28,12 @@ def get_surveys(db: Session = Depends(get_db), c_user: User = Depends(get_curren
 
 @router.get('/surveys/{survey_slug}/', response_model=SurveyDetailsSchema)
 def get_survey_details(survey_slug: str, db: Session = Depends(get_db)):
-    survey_details = Survey.objects(db).filter_by(slug=survey_slug).first()
+    """
+    This is for public survey only. So, only published survey will be available.
+    """
+    survey_details = Survey.objects(db).filter_by(slug=survey_slug, status=SurveyStatusEnum.Published.value).first()
+    if not survey_details:
+        raise HTTPException(detail='No survey found.', status_code=status.HTTP_404_NOT_FOUND)
     return survey_details
 
 
