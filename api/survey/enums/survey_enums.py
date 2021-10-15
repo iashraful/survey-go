@@ -10,6 +10,7 @@ class SurveyStatusEnum(BaseEnum):
 class QuestionTypeEnum(BaseEnum):
     Text: str = 'text'
     Number: str = 'number'
+    PositiveNumber: str = 'positive_number'
     SingleSelect: str = 'single_select'
     MultipleSelect: str = 'multiple_select'
     MultipleChoice: str = 'multiple_choice'

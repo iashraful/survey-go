@@ -30,11 +30,11 @@
             out-format="base64" @validate="checkValidation">
           </image-input-field>
           <multiple-select-field
-            v-if="item.type === fieldTypes.multiSelect"
+            v-if="item.type === fieldTypes.multipleSelect"
             :field="item" :submitted="submitted" @validate="checkValidation">
           </multiple-select-field>
           <single-select-field
-            v-if="item.type === fieldTypes.select"
+            v-if="item.type === fieldTypes.singleSelect"
             :field="item" :submitted="submitted" @validate="checkValidation">
           </single-select-field>
         </div>
@@ -121,6 +121,7 @@ export default {
 
 .form-builder .submit-btn {
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   padding: 5px 20px;
 }
 </style>

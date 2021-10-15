@@ -7,6 +7,6 @@ export default {
   multiImage: 'multi_image',
   file: 'file',
   multiFile: 'multi_file',
-  select: 'select',
-  multiSelect: 'multi_select'
+  singleSelect: 'single_select',
+  multipleSelect: 'multiple_select'
 }

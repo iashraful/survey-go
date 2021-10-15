@@ -25,7 +25,7 @@ def get_surveys(db: Session = Depends(get_db), c_user: User = Depends(get_curren
 
 
 @router.get('/surveys/{survey_slug}/', response_model=SurveyDetailsSchema)
-def get_survey_details(survey_slug: str, db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
+def get_survey_details(survey_slug: str, db: Session = Depends(get_db)):
     survey_details = Survey.objects(db).filter_by(slug=survey_slug).first()
     return survey_details
 
