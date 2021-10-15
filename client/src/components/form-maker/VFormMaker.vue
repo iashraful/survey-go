@@ -29,12 +29,20 @@
             :field="item" :submitted="submitted"
             out-format="base64" @validate="checkValidation">
           </image-input-field>
+          <multiple-select-field
+            v-if="item.type === fieldTypes.multiSelect"
+            :field="item" :submitted="submitted" @validate="checkValidation">
+          </multiple-select-field>
+          <single-select-field
+            v-if="item.type === fieldTypes.select"
+            :field="item" :submitted="submitted" @validate="checkValidation">
+          </single-select-field>
         </div>
       </div>
-      <button
-        class="submit-btn"
-        type="submit">{{ submitBtnText | setDefault('Submit') }}
-      </button>
+      <b-button
+        class="submit-btn" type="is-primary"
+        native-type="submit">{{ submitBtnText | setDefault('Submit') }}
+      </b-button>
     </form>
   </div>
 </template>
@@ -58,7 +66,7 @@ export default {
     handleSubmit () {
       this.submitted = true
       this.runValidation().then(() => {
-        console.log('submitted')
+        console.log(this.formData)
       }).catch((err) => {
         console.error(err)
       })

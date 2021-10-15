@@ -1,7 +1,7 @@
 <template>
   <div class="img-input">
     <label class="label">{{ field.title }}</label>
-    <b-field :class="{'has-name': !!file}" class="file is-primary">
+    <b-field :class="{'has-name': !!file}" class="file">
       <b-upload v-model="file" drag-drop>
         <section v-if="base64Image !== ''" class="preview-section">
           <b-image
@@ -24,6 +24,7 @@
         </section>
       </b-upload>
     </b-field>
+    <p class="help is-danger" v-if="errorText !== '' && displayErrorMgs">{{ errorText }}</p>
   </div>
 </template>
 

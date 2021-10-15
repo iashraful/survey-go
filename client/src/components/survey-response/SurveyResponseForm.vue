@@ -2,7 +2,7 @@
   <div>
     <h2 class="title">Example 1</h2>
     <v-form-maker
-      submitBtnText="Save"
+      submitBtnText="Submit"
       :config="config"
     />
   </div>
@@ -31,6 +31,28 @@ export default {
                 title: 'Last Name',
                 type: 'text',
                 name: 'last_name'
+              },
+              {
+                title: 'What do you use?',
+                type: 'select',
+                name: 'what_do_you_use',
+                options: [
+                  { label: 'Mobile Phone', value: 'Mobile Phone' },
+                  { label: 'Land Line', value: 'Land Line' },
+                  { label: 'Multiple Mobile Phones', value: 'Multiple Mobile Phones' },
+                  { label: 'Nothing', value: 'Nothing' }
+                ]
+              },
+              {
+                title: 'What do Love?',
+                type: 'multi_select',
+                name: 'what_do_you_love',
+                options: [
+                  { label: 'Mobile Phone', value: 'Mobile Phone' },
+                  { label: 'Land Line', value: 'Land Line' },
+                  { label: 'Multiple Mobile Phones', value: 'Multiple Mobile Phones' },
+                  { label: 'Nothing', value: 'Nothing' }
+                ]
               },
               {
                 title: 'Email',
