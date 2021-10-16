@@ -38,8 +38,18 @@
         <b-tooltip label="DELETE!! Will be lost forever" position="is-top">
           <b-button
             outlined @click="deleteSurvey(props.row.slug)"
+            style="margin-right: 2px"
             type="is-danger" size="is-small"
             icon-pack="fas" icon-left="trash"></b-button>
+        </b-tooltip>
+        <b-tooltip
+          :label="props.row.status === 'Published' ? 'Share the survey to collect data.' : 'Before you copy the link, publish the survey.'"
+          position="is-top">
+          <b-button
+            :disabled="props.row.status !== 'Published'"
+            outlined @click="copySurveyResponseLink(props.row.slug)"
+            type="is-primary" size="is-small"
+            icon-pack="fas" icon-left="share"></b-button>
         </b-tooltip>
       </b-table-column>
 
@@ -51,7 +61,7 @@
 </template>
 
 <script>
-import { _get, createOrUpdate, _del } from '@/utils/api-request'
+import { _del, _get, createOrUpdate } from '@/utils/api-request'
 
 export default {
   name: 'SurveyList',
@@ -87,7 +97,7 @@ export default {
         onConfirm: async () => {
           try {
             const response = await _del({ path: `/v1/surveys/${slug}/` })
-            if (response.status === 204) {
+            if (response.status === 200) {
               this.findSurveyAndRemove(slug)
               this.$buefy.toast.open({
                 message: 'Survey deleted successfully.',
@@ -144,6 +154,14 @@ export default {
       if (_index !== -1) {
         this.surveys.splice(_index, 1)
       }
+    },
+    async copySurveyResponseLink (slug) {
+      const responseLink = `${window.location.origin}/survey-responses/${slug}/create`
+      await navigator.clipboard.writeText(responseLink)
+      this.$buefy.toast.open({
+        message: 'Link copied to the clipboard.',
+        type: 'is-success'
+      })
     }
   },
   filters: {

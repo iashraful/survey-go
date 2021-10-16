@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -37,7 +37,7 @@ class SurveyResponseDetailsSchema(BaseModel):
     id: int
     survey_id: int
     slug: str
-    user: UserBasicSchema
+    user: Optional[UserBasicSchema]
     created_time: datetime
     question_responses: List[QuestionResponseDetailsSchema]
 

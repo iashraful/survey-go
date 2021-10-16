@@ -78,12 +78,12 @@ def create_access_token(*, sub: str) -> str:
 
 
 def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Any:
+    credentials_exception = HTTPException(
+        status_code=401,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
     try:
-        credentials_exception = HTTPException(
-            status_code=401,
-            detail="Could not validate credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
         payload = jwt.decode(
             token,
             settings.JWT_SECRET,
@@ -93,6 +93,8 @@ def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_
         username: str = payload.get("sub")
         token_data = TokenData(username=username)
     except JWTError:
+        credentials_exception.status_code = 479
+        credentials_exception.detail = 'Signature Expired!'
         raise credentials_exception
     user = User.objects(db).filter(User.id == token_data.username).first()
     if user is None:

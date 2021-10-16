@@ -38,6 +38,21 @@ export default [
     }
   },
   {
+    path: '/survey-responses',
+    name: 'SurveyResponseListView',
+    component: () => import(/* webpackChunkName: "survey-response-list" */ '../views/survey-response/SurveyResponseListView.vue'),
+    meta: {
+      middleware: [
+        middlewares.isAuthenticated
+      ]
+    }
+  },
+  {
+    path: '/survey-responses/:surveySlug/create',
+    name: 'SurveyResponseFormView',
+    component: () => import(/* webpackChunkName: "survey-response-form" */ '../views/survey-response/SurveyResponseFormView.vue')
+  },
+  {
     path: '/about',
     name: 'About',
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),

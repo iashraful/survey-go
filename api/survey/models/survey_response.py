@@ -7,7 +7,7 @@ class SurveyResponse(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     slug = Column(String, unique=True)
-    survey_id = Column(Integer, ForeignKey('surveys.id'))
+    survey_id = Column(Integer, ForeignKey('surveys.id', ondelete='SET NULL'), nullable=True)
 
     # Relationship
     user = relationship("User", back_populates='responses')
@@ -23,7 +23,7 @@ class SurveyResponse(ModelBase):
 
 class QuestionResponse(ModelBase):
     id = Column(Integer, primary_key=True, index=True)
-    question_id = Column(Integer, ForeignKey('questions.id'))
+    question_id = Column(Integer, ForeignKey('questions.id', ondelete='SET NULL'), nullable=True)
     survey_response_id = Column(Integer, ForeignKey('survey_responses.id'))
     answer_text = Column(String(512))
     created_time = Column(DateTime)

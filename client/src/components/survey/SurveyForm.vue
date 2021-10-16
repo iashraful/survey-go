@@ -119,7 +119,7 @@ export default {
               message: 'Survey saved successful.',
               type: 'is-success'
             })
-            this.$router.push('/surveys')
+            await this.$router.push('/surveys')
           }
         } catch (e) {
           this.$buefy.toast.open({

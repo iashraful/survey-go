@@ -6,13 +6,23 @@ function makeApiUrl (path) {
   return `${API_URL}${path}`
 }
 
+function _triggerEmergencyLogout () {
+  store.dispatch('triggerLogout')
+}
+
 export const _get = async function ({ path, noToken = false }) {
   const _headers = {}
   if (!noToken) {
     _headers.Authorization = `Bearer ${store.getters.getAccessToken}`
   }
   const url = makeApiUrl(path)
-  return await Axios.get(url, { headers: _headers })
+  const response = await Axios.get(url, { headers: _headers }).catch((err) => {
+    if (err.response.status === 479) {
+      _triggerEmergencyLogout()
+    }
+    throw err
+  })
+  return response
 }
 
 export const createOrUpdate = async function ({ path, data, noToken = false, method = 'post' }) {
@@ -22,11 +32,27 @@ export const createOrUpdate = async function ({ path, data, noToken = false, met
   }
   const url = makeApiUrl(path)
   if (method === 'put') {
-    return await Axios.put(url, data, { headers: _headers })
+    return await Axios.put(url, data, { headers: _headers }).catch((err) => {
+      if (err.response.status === 479) {
+        _triggerEmergencyLogout()
+      }
+      throw err
+    })
   } else if (method === 'patch') {
-    return await Axios.patch(url, data, { headers: _headers })
+    return await Axios.patch(url, data, { headers: _headers }).catch((err) => {
+      if (err.response.status === 479) {
+        _triggerEmergencyLogout()
+      }
+      throw err
+    })
   }
-  return await Axios.post(url, data, { headers: _headers })
+  const response = await Axios.post(url, data, { headers: _headers }).catch((err) => {
+    if (err.response.status === 479) {
+      _triggerEmergencyLogout()
+    }
+    throw err
+  })
+  return response
 }
 
 export const _del = async function ({ path, noToken = false }) {
@@ -35,5 +61,11 @@ export const _del = async function ({ path, noToken = false }) {
     _headers.Authorization = `Bearer ${store.getters.getAccessToken}`
   }
   const url = makeApiUrl(path)
-  return await Axios.delete(url, { headers: _headers })
+  const response = await Axios.delete(url, { headers: _headers }).catch((err) => {
+    if (err.response.status === 479) {
+      _triggerEmergencyLogout()
+    }
+    throw err
+  })
+  return response
 }
