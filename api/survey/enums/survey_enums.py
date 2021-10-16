@@ -5,6 +5,7 @@ class SurveyStatusEnum(BaseEnum):
     Draft: str = 'Draft'
     Published: str = 'Published'
     Archived: str = 'Archived'
+    Deleted: str = 'Deleted'
 
 
 class QuestionTypeEnum(BaseEnum):

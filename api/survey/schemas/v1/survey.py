@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from api.survey.enums.survey_enums import SurveyStatusEnum
 from api.auth.schemas.v1.user import UserBasicSchema
+from api.survey.enums.survey_enums import SurveyStatusEnum
 
 
 class SurveySchema(BaseModel):
@@ -128,6 +128,9 @@ class QuestionOptionUpdateSchema(QuestionOptionCreateSchema):
     name: str
     name_translation: str
 
+    class Config:
+        orm_mode = True
+
 
 class SurveyQuestionUpdateSchema(SurveyQuestionCreateSchema):
     id: Optional[int]
@@ -137,6 +140,9 @@ class SurveyQuestionUpdateSchema(SurveyQuestionCreateSchema):
     status: Optional[str] = SurveyStatusEnum.Draft.value
     is_required: Optional[bool]
     options: List[QuestionOptionUpdateSchema]
+
+    class Config:
+        orm_mode = True
 
 
 class SurveySectionUpdateSchema(SurveySectionCreateSchema):
@@ -152,7 +158,13 @@ class SurveyUpdateSchema(SurveyCreateSchema):
     status: Optional[str] = SurveyStatusEnum.Draft.value
     sections: List[SurveySectionUpdateSchema]
 
+    class Config:
+        orm_mode = True
+
 
 # Survey Partial Update Schema
 class SurveyPublishSchema(BaseModel):
     status: str
+
+    class Config:
+        orm_mode = True

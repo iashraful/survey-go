@@ -1,27 +1,28 @@
 import uuid
-from api.survey.models.survey import SurveySection
+from datetime import datetime
 from typing import List
 
+import sqlalchemy
 from fastapi import APIRouter, HTTPException
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
+from starlette import status
 
+from api.auth.models import User
 from api.core.auth import get_current_user
 from api.core.database import get_db
 from api.survey.enums.survey_enums import QuestionTypeEnum, SurveyStatusEnum
 from api.survey.models import QuestionOption, Survey, SurveyQuestion
-from api.auth.models import User
+from api.survey.models.survey import SurveySection
 from api.survey.schemas.v1.survey import SurveyCreateSchema, SurveyDetailsSchema, SurveyQuestionSchema, SurveySchema, \
     SurveyUpdateSchema, SurveyPublishSchema
-
-from starlette import status
 
 router = APIRouter()
 
 
 @router.get('/surveys/', response_model=List[SurveySchema])
 def get_surveys(db: Session = Depends(get_db), c_user: User = Depends(get_current_user)):
-    surveys = Survey.objects(session=db).filter_by(
+    surveys = Survey.objects(session=db).filter(sqlalchemy.not_(Survey.status==SurveyStatusEnum.Deleted.value)).filter_by(
         user_id=c_user.id).order_by(Survey.published_time.desc()).all()
     return surveys
 
@@ -187,17 +188,19 @@ def partial_update_survey(survey_slug: str, survey: SurveyPublishSchema,  db: Se
     if not _survey:
         raise HTTPException(status_code=404, detail='No survey found.')
     _survey.status = survey.status
+    _survey.published_time = datetime.now()
     SurveyQuestion.objects(db).filter_by(survey_id=_survey.id).update(
         {SurveyQuestion.status: survey.status}, synchronize_session = False)
     db.commit()
     db.refresh(_survey)
     return _survey
 
-@router.delete('/surveys/{survey_slug}/', status_code=204)
+@router.delete('/surveys/{survey_slug}/', status_code=200)
 def delete_survey(survey_slug: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    survey = Survey.objects(db).filter_by(slug=survey_slug)
-    if not survey.first():
+    survey = Survey.objects(db).filter_by(slug=survey_slug).first()
+    if not survey:
         raise HTTPException(status_code=404, detail='No survey found.')
-    survey.delete(synchronize_session=False)
+    survey.status = SurveyStatusEnum.Deleted.value
     db.commit()
+    db.refresh(survey)
     return survey

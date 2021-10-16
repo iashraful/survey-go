@@ -97,7 +97,7 @@ export default {
         onConfirm: async () => {
           try {
             const response = await _del({ path: `/v1/surveys/${slug}/` })
-            if (response.status === 204) {
+            if (response.status === 200) {
               this.findSurveyAndRemove(slug)
               this.$buefy.toast.open({
                 message: 'Survey deleted successfully.',
