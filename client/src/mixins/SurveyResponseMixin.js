@@ -1,3 +1,5 @@
+import fieldTypes from '../utils/field-types'
+
 export default {
   name: 'SurveyResponseMixin',
   methods: {
@@ -27,6 +29,23 @@ export default {
         return temp
       })
       return config
+    },
+    parseFormDataToAPI (data, survey) {
+      const result = {
+        survey_id: survey.id,
+        question_responses: []
+      }
+      result.question_responses = Object.keys(data).map((_key) => {
+        const temp = {
+          question_id: _key,
+          answer_text: data[_key][_key]
+        }
+        if (data[_key].field.type === fieldTypes.multipleSelect) {
+          temp.answer_text = data[_key][_key].join('\n')
+        }
+        return temp
+      })
+      return result
     }
   }
 }

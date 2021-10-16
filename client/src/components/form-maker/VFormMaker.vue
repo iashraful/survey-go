@@ -66,7 +66,7 @@ export default {
     handleSubmit () {
       this.submitted = true
       this.runValidation().then(() => {
-        console.log(this.formData)
+        this.$emit('onSubmit', this.formData)
       }).catch((err) => {
         console.error(err)
       })

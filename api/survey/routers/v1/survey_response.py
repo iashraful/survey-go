@@ -1,5 +1,8 @@
 from datetime import datetime
 import uuid
+
+from starlette.requests import Request
+
 from api.survey.models.survey_response import QuestionResponse, SurveyResponse
 from fastapi import APIRouter
 from fastapi.params import Depends
@@ -15,12 +18,16 @@ router = APIRouter()
 
 @router.post('/survey-responses/',
              response_model=SurveyResponseDetailsSchema, status_code=201)
-def create_survey_response(response: SurveyResponseCreateSchema, db: session = Depends(get_db),
-                           current_user: User = Depends(get_current_user)):
+def create_survey_response(response: SurveyResponseCreateSchema, request: Request, db: session = Depends(get_db)):
+    user = None
+    if 'Authorization' in request.headers:
+        _token = request.headers['Authorization'].split()[1]
+        user = get_current_user(db=db, token=_token)
     instance = SurveyResponse(
-        survey_id=response.survey_id, created_time=datetime.now(),
-        user_id=current_user.id, slug=uuid.uuid4().hex
+        survey_id=response.survey_id, created_time=datetime.now(), slug=uuid.uuid4().hex
     )
+    if user:
+        instance.user_id = user.id
     db.add(instance)
     db.commit()
     _question_response_list = []
@@ -32,5 +39,6 @@ def create_survey_response(response: SurveyResponseCreateSchema, db: session = D
             created_time=datetime.now()
         ))
     db.bulk_save_objects(_question_response_list)
+    db.commit()
     db.refresh(instance)
     return instance
