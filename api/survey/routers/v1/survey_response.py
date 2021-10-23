@@ -1,17 +1,18 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
+from typing import List
 
-from starlette.requests import Request
-
-from api.survey.models.survey_response import QuestionResponse, SurveyResponse
 from fastapi import APIRouter
 from fastapi.params import Depends
 from sqlalchemy.orm import session
+from starlette.requests import Request
 
+from api.auth.models import User
 from api.core.auth import get_current_user
-from api.auth.models.user import User
 from api.core.database import get_db
-from api.survey.schemas.v1.survey_response import SurveyResponseCreateSchema, SurveyResponseDetailsSchema
+from api.survey.models.survey_response import QuestionResponse, SurveyResponse
+from api.survey.schemas.v1.survey_response import SurveyResponseCreateSchema, SurveyResponseDetailsSchema, \
+    SurveyResponseListSchema
 
 router = APIRouter()
 
@@ -42,3 +43,9 @@ def create_survey_response(response: SurveyResponseCreateSchema, request: Reques
     db.commit()
     db.refresh(instance)
     return instance
+
+
+@router.get('/survey-responses/', response_model=List[SurveyResponseListSchema], status_code=200)
+def get_survey_responses(db: session = Depends(get_db), c_user: User = Depends(get_current_user)):
+    responses = SurveyResponse.objects(session=db).order_by(SurveyResponse.created_time.desc()).all()
+    return responses

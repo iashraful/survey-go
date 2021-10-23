@@ -19,3 +19,9 @@ def test_create_survey_response(client, auth_token, test_data):
     response = client.post('/api/v1/survey-responses/', json=json_data,
                            headers={'Authorization': f'Bearer {auth_token}'})
     assert response.status_code == 201
+
+
+def test_get_survey_response_list(client, auth_token):
+    response = client.get('/api/v1/survey-responses/',
+                           headers={'Authorization': f'Bearer {auth_token}'})
+    assert response.status_code == 200

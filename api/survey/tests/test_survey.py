@@ -118,4 +118,4 @@ def test_delete_survey(client, auth_token, test_data):
     response = client.delete(
         url=f'/api/v1/surveys/{_survey_slug}/', headers={'Authorization': f'Bearer {auth_token}'}
     )
-    assert response.status_code == 204
+    assert response.status_code == 200

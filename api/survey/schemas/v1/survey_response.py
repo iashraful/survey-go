@@ -32,6 +32,23 @@ class QuestionResponseDetailsSchema(BaseModel):
     class Config:
         orm_mode = True
 
+class SurveyBasicInfo(BaseModel):
+    id: int
+    name: str
+
+    class Config:
+        orm_mode = True
+
+class SurveyResponseListSchema(BaseModel):
+    id: int
+    survey_id: Optional[int]
+    survey: Optional[SurveyBasicInfo]
+    slug: str
+    user: Optional[UserBasicSchema]
+    created_time: datetime
+
+    class Config:
+        orm_mode = True
 
 class SurveyResponseDetailsSchema(BaseModel):
     id: int
